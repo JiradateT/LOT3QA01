@@ -1,6 +1,6 @@
 in:
   type: sqlserver
-  driver_path: bin\sqljdbc4-3.0.jar
+  driver_path: /home/qemtdadmin/tddev/software/sqljdbc_8.2/enu/mssql-jdbc-8.2.0.jre8.jar
   host: 172.30.84.102
   user: Treasure
   password: Init1234

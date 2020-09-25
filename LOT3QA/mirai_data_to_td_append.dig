@@ -5,10 +5,10 @@ schedule:
 
 _export:
   mail:
-    from: TD_Interface@no-reply
+    from: TD_InterfaceQA@no-reply
     host: 172.30.2.203
     port: 25
-    to: [pattharin_b@tripetch-it.co.th, jiradate_t@tripetch-it.co.th]
+    to: [jiradate_t@tripetch-it.co.th]
 
   plugin:
     repositories:
@@ -16,48 +16,25 @@ _export:
     dependencies:
       - com.github.tamanyan:digdag-hangouts-chat:0.1.5
   webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
-  workflow_name: Service Appointment and Proactive
+  workflow_name: Mirai data to TD Daily
   ENV: develop
   td:
-    database: tmp_model_database
+    database: mirai_data_to_td
   
 +start_message:
-  sh>: echo start Service Appointment and Proactive
+  sh>: echo start Mirai data to TD
 
 +current_loc:
   sh>: pwd
-  
+
 +start_email:
-  mail>: ./TD_proactive_mail_body.txt
-  subject: Service Appointment and Proactive Workflow Started  
+  mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+  subject: Mirai data to TD Workflow Daily Started 
 
-+serivce_appointment_and_proactive_append:
-
-  +1_service_appointment:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
-         embulk run ~/DIGDAG_TD/TD_Embulk/service_appointment_append.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Serivce Appointment Append Workflow Error
-
-  +2_Proactive:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;  
-         embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Proactive Append Workflow Error
-
-
++mirai_data_to_td_append:
   +1_m_customer_attribute_details:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +2_m_customer_attribute_details_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details_r.yml
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Attribute Details Workflow Error
@@ -67,359 +44,485 @@ _export:
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details_history.yml
     _error:
       mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+      subject: Customer Attribute Details History Workflow Error
 
-  +4_m_customer_attribute_details_history_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details_history_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
 
   +5_m_customer_attribute_value:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_value.yml
     _error:
       mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+      subject: Customer Attribute Workflow Error
 
-  +6_m_customer_attribute_value_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_value_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #modify value > values
+  #error column...
+#  +6_m_customer_attribute_value_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_value_r.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Attribute Onetime Workflow Error
 
-  +7_m_customer_branch_parameters:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_parameters.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #modify driver path
+#  +7_m_customer_branch_parameters:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_parameters.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Branch Workflow Error
 
-  +8_m_customer_branch_parameters_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_parameters_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +9_m_customer_branch_status:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Branch Status Workflow Error
 
-  +9_m_customer_branch_status:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
 
-  +10_m_customer_branch_status_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +11_m_customer_branch_status_history:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Branch Status History Workflow Error
 
-  +11_m_customer_branch_status_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
 
-  +12_m_customer_branch_status_history_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +13_m_customer_profile_address:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profile Address Workflow Error
 
-  +13_m_customer_profile_address:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +15_m_customer_profile_address_history:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address_history.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profile Address History Workflow Error
 
-  +14_m_customer_profile_address_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +17_m_customer_profile_contact:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profile Contact Workflow Error
 
-  +15_m_customer_profile_address_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
 
-  +16_m_customer_profile_address_history_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address_history_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +19_m_customer_profile_contact_history:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_history.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profile Contact History Workflow Error
 
-  +17_m_customer_profile_contact:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +21_m_customer_profiles:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profiles Workflow Error
 
-  +18_m_customer_profile_contact_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +23_m_customer_profiles_history:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profiles History Workflow Error
 
-  +19_m_customer_profile_contact_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+#  +25_m_cvip_answer_form_mapping_master_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answer_form_mapping_master_r.yml#
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Answer Form Mapping Master Onetime Workflow Error
 
-  +20_m_customer_profile_contact_history_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_history_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +26_m_cvip_answers_detail:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_detail.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Answer Details Workflow Error
 
-  +21_m_customer_profiles:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+#  +28_m_cvip_answer_master_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_master_r.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Answer Master Onetime Workflow Error
 
-  +22_m_customer_profiles_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +29_m_cvip_brand_answers_detail:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_brand_answers_detail.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Brand Answers Detail Workflow Error
 
-  +23_m_customer_profiles_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +31_m_cvip_forms_header:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_header.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Forms Header Workflow Error
 
-  +24_m_customer_profiles_history_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+#  +33_m_cvip_forms_configuration_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Forms Configuration Onetime Workflow Error
 
-  +25_m_cvip_answer_form_mapping_master_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answer_form_mapping_master_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+#  +34_m_cvip_question_form_mapping_master_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_question_form_mapping_master_r.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Question Form Mapping Master Onetime Workflow Error
 
-  +26_m_cvip_answers_detail:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_detail.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+#  +35_m_cvip_question_master_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_questions_master_r.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Question Master Onetime Workflow Error
 
-  +27_m_cvip_answers_detail_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_detail_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+  ##Fix tabtab in select
+#  +36_m_dealer_network_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Dealer Network Onetime Workflow Error
 
-  +28_m_cvip_answer_master_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_master_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+#  +37_m_hr_employee_master:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_hr_employee_master.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Employee Master Workflow Error
 
-  +29_m_cvip_brand_answers_detail:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_brand_answers_detail.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+  ##Fix tabtab in select
+#  +38_m_model_information_r:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_information_r.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Model Information Onetime Workflow Error
 
-  +30_m_cvip_brand_answers_detail_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_brand_answers_detail_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+  #AllData use in append + onetime
+#  +39_m_quick_master_values:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_quick_master_values.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Quick Master Values Workflow Error
 
-  +31_m_cvip_forms_header:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_header.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +40_m_repair_history_details:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Repair History Details Workflow Error
 
-  +32_m_cvip_forms_header_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_header_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +42_m_repair_history_header:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_header.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Repair History Header Workflow Error
 
-  +33_m_cvip_forms_configuration_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +44_m_retail_sales_info:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_retail_sales_info.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Retail Sales Info Workflow Error
 
-  +34_m_cvip_question_form_mapping_master_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_question_form_mapping_master_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +46_m_vehicle_dealer_group_parameters:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_dealer_group_parameters.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Vehicle Dealer Group parameter Workflow Error
 
-  +35_m_cvip_question_master_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_questions_master_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +36_m_dealer_network_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +37_m_hr_employee_master:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_hr_employee_master.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +38_m_model_information_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_information_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +39_m_quick_master_values:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_quick_master_values.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +40_m_repair_history_details:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +41_m_repair_history_details_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +42_m_repair_history_header:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_header.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +43_m_repair_history_header_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_header_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +44_m_retail_sales_info:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_retail_sales_info.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +45_m_retail_sales_info_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_retail_sales_info_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +46_m_vehicle_dealer_group_parameters:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_dealer_group_parameters.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-	  
-  +47_m_vehicle_dealer_group_parameters_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_dealer_group_parameters_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +48_m_vehicle_master:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_master.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
-
-  +49_m_vehicle_master_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_master_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Workflow Error
+#  +48_m_vehicle_master:
+#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_master.yml
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Vehicle Master Workflow Error
 
   +update_master_tables:
     _parallel: true
 
-    +upd_service_appointment:
+    +1_upd_m_customer_attribute_details:
       _retry: 2
 
-      +delete_diff_serivce_appointment_data:
+      +delete_m_customer_attribute_details_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q service_appointment_deletion_diff.sql
+             td query -d mirai_test_qa -T presto -q m_customer_attribute_details_deletion.sql
 
-      +insert_diff_service_appointment_data:
+      +insert_m_customer_attribute_details_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q service_appointment_insertion_diff.sql
+             td query -d mirai_test_qa -T presto -q m_customer_attribute_details_insertion.sql
 
-    +upd_proactive:
-      _retry: 2
-
-      +delete_diff_m_proactive_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q proactive_deletion_diff.sql
-
-      +insert_diff_m_proactive_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q proactive_insertion_diff.sql
+#    +2_upd_m_customer_attribute_details_history:
+#      _retry: 2
+#
+#      +delete_m_customer_attribute_details_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_attribute_details_history_deletion.sql
+#
+#      +insert_m_customer_attribute_details_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_attribute_details_history_insertion.sql
+#
+#    +3_upd_m_customer_attribute_values:
+#      _retry: 2
+#
+#      +delete_m_customer_attribute_values_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_attribute_values_deletion.sql
+#
+#      +insert_m_customer_attribute_values_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_attribute_values_insertion.sql
+#
+#    +4_upd_m_customer_branch_parameters:
+#      _retry: 2
+#
+#      +delete_diff_m_customer_branch_parameters_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_branch_parameters_deletion_diff.sql
+#
+#      +insert_diff_m_customer_branch_parameters_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_branch_parameters_insertion_diff.sql
+#
+#    +5_upd_m_customer_branch_status_history:
+#      _retry: 2
+#
+#      +delete_m_customer_branch_status_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_deletion.sql
+#
+#      +insert_m_customer_branch_status_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_insertion.sql
+#
+#    +6_upd_m_customer_branch_status:
+#      _retry: 2
+#
+#      +delete_diff_m_customer_branch_status_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_branch_status_deletion_diff.sql
+#
+#      +insert_diff_m_customer_branch_status_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_branch_status_insertion_diff.sql
+#
+#    +7_upd_m_customer_profile_address_history:
+#      _retry: 2
+#
+#      +delete_m_customer_profile_address_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_address_history_deletion.sql
+#
+#      +insert_m_customer_profile_address_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_address_history_insertion.sql
+#
+#    +8_upd_m_customer_profile_address:
+#      _retry: 2
+#
+#      +delete_diff_m_customer_profile_address_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_address_deletion_diff.sql
+#
+#      +insert_diff_m_customer_profile_address_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_address_insertion_diff.sql
+#
+#    +9_upd_m_customer_profile_contact:
+#      _retry: 2
+#
+#      +delete_diff_m_customer_profile_contact_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_deletion_diff.sql
+#
+#      +insert_diff_m_customer_profile_contact_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_insertion_diff.sql
+#
+#    +10_upd_m_customer_profile_contact_history:
+#      _retry: 2
+#
+#      +delete_m_customer_profile_contact_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_history_deletion.sql
+#
+#      +insert_m_customer_profile_contact_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_history_insertion.sql
+#
+#    +11_upd_m_customer_profiles:
+#      _retry: 2
+#
+#      +delete_diff_m_customer_profiles_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profiles_deletion_diff.sql
+#
+#      +insert_diff_m_customer_profiles_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profiles_insertion_diff.sql
+#
+#    +12_upd_m_customer_profiles_history:
+#      _retry: 2
+#
+#      +delete_diff_m_customer_profiles_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profiles_history_deletion_diff.sql
+#
+#      +insert_diff_m_customer_profiles_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_customer_profiles_history_insertion_diff.sql
+#
+#    +13_upd_m_cvip_answers_detail:
+#      _retry: 2
+#
+#      +delete_diff_m_cvip_answers_detail_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_cvip_answers_detail_deletion_diff.sql
+#
+#      +insert_diff_m_cvip_answers_detail_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_cvip_answers_detail_insertion_diff.sql
+#
+#    +14_upd_m_cvip_brand_answers_details:
+#      _retry: 2
+#
+#      +delete_diff_m_cvip_brand_answers_details_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_cvip_brand_answers_detail_deletion_diff.sql
+#
+#      +insert_diff_m_cvip_brand_answers_details_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_cvip_brand_answers_details_insertion_diff.sql
+#
+#    +15_upd_m_cvip_form_header:
+#      _retry: 2
+#
+#      +delete_diff_m_cvip_form_header_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_cvip_form_header_deletion_diff.sql
+#
+#      +insert_diff_m_cvip_form_header_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_cvip_form_header_insertion_diff.sql
+#
+#    +16_upd_m_repair_history_details:
+#      _retry: 2
+#
+#      +delete_diff_m_repair_history_details_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_repair_history_details_deletion_diff.sql
+#
+#      +insert_diff_m_repair_history_details_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_repair_history_details_insertion_diff.sql
+#
+#    +17_upd_m_repair_history_header:
+#      _retry: 2
+#
+#      +delete_diff_m_repair_history_header_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_repair_history_header_deletion_diff.sql
+#
+#      +insert_diff_m_repair_history_header_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_repair_history_header_insertion_diff.sql
+#
+#    +18_upd_m_retail_sales_info:
+#      _retry: 2
+#
+#      +delete_diff_m_retail_sales_info_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_retail_sales_info_deletion_diff.sql
+#
+#      +insert_diff_m_retail_sales_info_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_retail_sales_info_insertion_diff.sql
+#
+#    +19_upd_m_vehicle_dealer_group_parameters:
+#      _retry: 2
+#
+#      +delete_diff_m_vehicle_dealer_group_parameters_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_vehicle_dealer_group_parameters_deletion_diff.sql
+#
+#      +insert_diff_m_vehicle_dealer_group_parameters_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_vehicle_dealer_group_parameters_insertion_diff.sql
+#
+#    +20_upd_m_vehicle_master:
+#      _retry: 2
+#
+#      +delete_diff_m_vehicle_master_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_vehicle_master_deletion_diff.sql
+#
+#      +insert_diff_m_vehicle_master_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_test_qa -T presto -q m_vehicle_master_insertion_diff.sql
 
 +success_message:
-    mail>: ./TD_proactive_mail_body.txt
-    subject: Service Appointment and Proactive Workflow Success
+    mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+    subject: Mirai data to TD Workflow Daily Success 

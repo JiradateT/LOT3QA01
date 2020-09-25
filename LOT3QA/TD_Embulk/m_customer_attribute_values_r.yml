@@ -4,7 +4,7 @@ in:
   host: 172.30.84.102
   user: Treasure
   password: Init1234
-  database: EMBULK_STG
+  database: EMBULK_DF
   fetch_rows: 30000
   query: |
     SELECT
