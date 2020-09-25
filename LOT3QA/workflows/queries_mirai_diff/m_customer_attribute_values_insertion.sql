@@ -1,0 +1,2 @@
+INSERT INTO r_customer_attribute_values
+SELECT * FROM diff_r_customer_attribute_values

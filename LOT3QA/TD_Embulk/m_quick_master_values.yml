@@ -1,0 +1,37 @@
+in:
+  type: sqlserver
+  driver_path: /home/qemtdadmin/tddev/software/sqljdbc_8.2/enu/mssql-jdbc-8.2.0.jre8.jar
+  host: 172.30.84.102
+  user: Treasure
+  password: Init1234
+  database: EMBULK_DF
+  fetch_rows: 3000
+  query: |
+    SELECT
+        QuickMasterRecordId as quick_master_record_id,
+        MasterId as master_id,
+        MasterKey as master_key,
+        MasterValue as master_value,
+        AlternateMasterValue as alternate_master_value,
+        Attribute1 as attribute1,
+        Attribute2 as attribute2,
+        Attribute3 as attribute3,
+        Attribute4 as attribute4,
+        Attribute5 as attribute5,
+        Description as description,
+        IsActive as is_active,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedBy as updated_by,
+        UpdatedDate as updated_date,
+        ReferenceId as reference_id,
+        AccessLevel as access_level
+    FROM TD.QuickMasterValues
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: 9540/cf6ea7f323effb36d9ae48542bedc246f4797c3e, endpoint: api.treasuredata.com,
+  database: mirai_test_qa, table: r_quick_master_values, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}

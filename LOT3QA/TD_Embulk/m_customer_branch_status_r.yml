@@ -1,0 +1,29 @@
+in:
+  type: sqlserver
+  driver_path: /home/qemtdadmin/tddev/software/sqljdbc_8.2/enu/mssql-jdbc-8.2.0.jre8.jar
+  host: 172.30.84.102
+  user: Treasure
+  password: Init1234
+  database: EMBULK_DF
+  fetch_rows: 3000
+  query: |
+    SELECT
+        BranchId as branch_id,
+        CustomerId as customer_id,
+        ProfileId as profile_id,
+        Status as status,
+        FollowUpStatus as follow_up_status,
+        ClassficationId as classfication_id,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedBy as updated_by,
+        UpdatedDate as updated_date
+        FROM TD.CustomerBranchStatus
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: 9540/cf6ea7f323effb36d9ae48542bedc246f4797c3e, endpoint: api.treasuredata.com,
+  database: mirai_test_qa, table: r_customer_branch_status, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}
