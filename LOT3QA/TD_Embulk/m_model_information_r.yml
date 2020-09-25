@@ -125,7 +125,6 @@ in:
 		ModelGroup_IsActive as model_group_is_active,
 		ModelOption_IsActive as model_option_is_active,
 		ModelColor_IsActive as model_color_is_active
-
         FROM TD.VW_CM_ModelInformation
 
 filters:

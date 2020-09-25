@@ -103,7 +103,6 @@ in:
 		IsActive as is_active,
 		UpdatedByUser as updated_by_user,
 		UpdatedDate as updated_date
-
         FROM TD.VW_CM_DealerNetwork
 
 filters:

@@ -18,8 +18,7 @@ in:
     CreatedBy as created_by,
     CreatedDate as created_date,
     UpdatedBy as updated_by,
-    UpdatedDate as updated_date,
-    VersionStamp as version_stamp
+    UpdatedDate as updated_date
     FROM TD.CustomerAttributeDetails
     WHERE UpdatedDate >= DATEADD(day, -14, GETDATE())
 

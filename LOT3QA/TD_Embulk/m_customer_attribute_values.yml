@@ -37,7 +37,6 @@ in:
     UpdatedBy as updated_by,
     UpdatedDate as updated_date,
     SocialIDDetails as social_id_details,
-    VersionStamp as version_stamp,
     CustomerImage as customer_image,
     SocialIDType as social_id_type
     FROM TD.CustomerAttributeValues
