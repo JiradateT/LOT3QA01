@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
-schedule:
-  daily>: 11:00:00
+#schedule:
+#  daily>: 11:00:00
 
 _export:
   mail:
@@ -34,13 +34,6 @@ _export:
 +mirai_data_to_td_append:
 
   #workflow_3 
-  +23_m_customer_profiles_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profiles History Workflow Error
-
   #AllData use in append + onetime
   +25_m_cvip_answer_form_mapping_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
@@ -80,30 +73,18 @@ _export:
       subject: CVIP Forms Header Workflow Error
 
   #AllData use in append + onetime
-  +33_m_cvip_forms_configuration_r:
+  ##Fix tabtab in select
+  +36_m_dealer_network_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
     _error:
       mail>: ./mail_body_error.txt
-      subject: CVIP Forms Configuration Onetime Workflow Error
+      subject: Dealer Network Onetime Workflow Error
 
   +update_master_tables:
     _parallel: true
 
     #workflow_3
-    +12_upd_m_customer_profiles_history:
-      _retry: 2
-
-      +delete_diff_m_customer_profiles_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profiles_history_deletion_diff.sql
-
-      +insert_diff_m_customer_profiles_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profiles_history_insertion_diff.sql
-
     +13_upd_m_cvip_answers_detail:
       _retry: 2
 

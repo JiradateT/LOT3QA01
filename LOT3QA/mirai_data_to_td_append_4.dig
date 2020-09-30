@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
-schedule:
-  daily>: 11:00:00
+#schedule:
+#  daily>: 11:00:00
 
 _export:
   mail:
@@ -35,6 +35,14 @@ _export:
 
   #workflow_4 
   #AllData use in append + onetime
+  +33_m_cvip_forms_configuration_r:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: CVIP Forms Configuration Onetime Workflow Error
+
+  #AllData use in append + onetime
   +34_m_cvip_question_form_mapping_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_question_form_mapping_master_r.yml
@@ -50,47 +58,11 @@ _export:
       mail>: ./mail_body_error.txt
       subject: CVIP Question Master Onetime Workflow Error
 
-  #AllData use in append + onetime
-  ##Fix tabtab in select
-  +36_m_dealer_network_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Dealer Network Onetime Workflow Error
-
-  #AllData use in append + onetime
-  +37_m_hr_employee_master:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_hr_employee_master.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Employee Master Workflow Error
-
-  +40_m_repair_history_details:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Repair History Details Workflow Error
-
   +update_master_tables:
     _parallel: true
 
     #workflow_4
-    +16_upd_m_repair_history_details:
-      _retry: 2
-
-      +delete_diff_m_repair_history_details_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_repair_history_details_deletion_diff.sql
-
-      +insert_diff_m_repair_history_details_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_repair_history_details_insertion_diff.sql
 
 +success_message:
     mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
-    subject: Mirai data to TD Workflow Daily Success 
+    subject: Mirai data to TD Workflow 4 Daily Success 
