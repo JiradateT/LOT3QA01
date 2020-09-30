@@ -71,6 +71,7 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Customer Branch Status Workflow Error
 
+  #workflow_2
   +11_m_customer_branch_status_history:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml
@@ -78,7 +79,6 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Customer Branch Status History Workflow Error
 
-  #workflow_2
   +13_m_customer_profile_address:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address.yml
@@ -107,6 +107,7 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Customer Profile Contact History Workflow Error
 
+  #workflow_3 
   +21_m_customer_profiles:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles.yml
@@ -121,7 +122,6 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Customer Profiles History Workflow Error
 
-  #workflow_3 
   #AllData use in append + onetime
   +25_m_cvip_answer_form_mapping_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
@@ -137,6 +137,7 @@ _export:
       mail>: ./mail_body_error.txt
       subject: CVIP Answer Details Workflow Error
 
+  #workflow_4 
   #AllData use in append + onetime
   +28_m_cvip_answer_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
@@ -161,16 +162,6 @@ _export:
       subject: CVIP Forms Header Workflow Error
 
   #AllData use in append + onetime
-  ##Fix tabtab in select
-  +36_m_dealer_network_r:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Dealer Network Onetime Workflow Error
-
-  #workflow_4 
-  #AllData use in append + onetime
   +33_m_cvip_forms_configuration_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml
@@ -186,6 +177,7 @@ _export:
       mail>: ./mail_body_error.txt
       subject: CVIP Question Form Mapping Master Onetime Workflow Error
 
+  #workflow_5
   #AllData use in append + onetime
   +35_m_cvip_question_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
@@ -194,7 +186,15 @@ _export:
       mail>: ./mail_body_error.txt
       subject: CVIP Question Master Onetime Workflow Error
 
-  #workflow_5
+  #AllData use in append + onetime
+  ##Fix tabtab in select
+  +36_m_dealer_network_r:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Dealer Network Onetime Workflow Error
+
   #AllData use in append + onetime
   +37_m_hr_employee_master:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
@@ -212,6 +212,14 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Model Information Onetime Workflow Error
 
+  +40_m_repair_history_details:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Repair History Details Workflow Error
+
+  #workflow_6
   #AllData use in append + onetime
   +39_m_quick_master_values:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
@@ -220,14 +228,6 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Quick Master Values Workflow Error
 
-  +40_m_repair_history_details:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Repair History Details Workflow Error
-
-  #workflow_6	  
   +42_m_repair_history_header:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_header.yml
@@ -314,19 +314,6 @@ _export:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_customer_branch_parameters_insertion_diff.sql
 
-    +5_upd_m_customer_branch_status_history:
-      _retry: 2
-
-      +delete_m_customer_branch_status_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_deletion.sql
-
-      +insert_m_customer_branch_status_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_insertion.sql
-
     +6_upd_m_customer_branch_status:
       _retry: 2
 
@@ -341,6 +328,19 @@ _export:
              td query -d mirai_test_qa -T presto -q m_customer_branch_status_insertion_diff.sql
 
     #workflow_2
+    +5_upd_m_customer_branch_status_history:
+      _retry: 2
+
+      +delete_m_customer_branch_status_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_deletion.sql
+
+      +insert_m_customer_branch_status_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_insertion.sql
+
     +7_upd_m_customer_profile_address_history:
       _retry: 2
 
@@ -393,6 +393,7 @@ _export:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_customer_profile_contact_history_insertion.sql
 
+    #workflow_3
     +11_upd_m_customer_profiles:
       _retry: 2
 
@@ -419,7 +420,6 @@ _export:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_customer_profiles_history_insertion_diff.sql
 
-    #workflow_3
     +13_upd_m_cvip_answers_detail:
       _retry: 2
 
@@ -433,6 +433,7 @@ _export:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_cvip_answers_detail_insertion_diff.sql
 
+    #workflow_4 
     +14_upd_m_cvip_brand_answers_details:
       _retry: 2
 
@@ -458,8 +459,6 @@ _export:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_cvip_form_header_insertion_diff.sql
-
-    #workflow_4 
 
     #workflow_5
     +16_upd_m_repair_history_details:

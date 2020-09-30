@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
-#schedule:
-#  daily>: 11:00:00
+schedule:
+  daily>: 08:25:00
 
 _export:
   mail:
@@ -34,6 +34,13 @@ _export:
 +mirai_data_to_td_append:
 
   #workflow_2
+  +11_m_customer_branch_status_history:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Customer Branch Status History Workflow Error
+
   +13_m_customer_profile_address:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address.yml
@@ -62,24 +69,23 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Customer Profile Contact History Workflow Error
 
-  +21_m_customer_profiles:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profiles Workflow Error
-
-  +23_m_customer_profiles_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profiles History Workflow Error
-
   +update_master_tables:
     _parallel: true
 
     #workflow_2
+    +5_upd_m_customer_branch_status_history:
+      _retry: 2
+
+      +delete_m_customer_branch_status_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_deletion.sql
+
+      +insert_m_customer_branch_status_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_insertion.sql
+
     +7_upd_m_customer_profile_address_history:
       _retry: 2
 
@@ -131,32 +137,6 @@ _export:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_customer_profile_contact_history_insertion.sql
-
-    +11_upd_m_customer_profiles:
-      _retry: 2
-
-      +delete_diff_m_customer_profiles_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profiles_deletion_diff.sql
-
-      +insert_diff_m_customer_profiles_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profiles_insertion_diff.sql
-
-    +12_upd_m_customer_profiles_history:
-      _retry: 2
-
-      +delete_diff_m_customer_profiles_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profiles_history_deletion_diff.sql
-
-      +insert_diff_m_customer_profiles_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profiles_history_insertion_diff.sql
 
 +success_message:
     mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt

@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
-#schedule:
-#  daily>: 11:00:00
+schedule:
+  daily>: 08:25:00
 
 _export:
   mail:
@@ -71,13 +71,6 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Customer Branch Status Workflow Error
 
-  +11_m_customer_branch_status_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Branch Status History Workflow Error
-
   +update_master_tables:
     _parallel: true
 
@@ -134,19 +127,6 @@ _export:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_customer_branch_parameters_insertion_diff.sql
 
-    +5_upd_m_customer_branch_status_history:
-      _retry: 2
-
-      +delete_m_customer_branch_status_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_deletion.sql
-
-      +insert_m_customer_branch_status_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_insertion.sql
-
     +6_upd_m_customer_branch_status:
       _retry: 2
 
@@ -159,7 +139,6 @@ _export:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_customer_branch_status_insertion_diff.sql
-
 
 +success_message:
     mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt

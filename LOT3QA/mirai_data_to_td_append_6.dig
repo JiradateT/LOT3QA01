@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
-#schedule:
-#  daily>: 11:00:00
+schedule:
+  daily>: 08:25:00
 
 _export:
   mail:
@@ -33,7 +33,15 @@ _export:
 
 +mirai_data_to_td_append:
 
-  #workflow_6	  
+  #workflow_6
+  #AllData use in append + onetime
+  +39_m_quick_master_values:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_quick_master_values.yml
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Quick Master Values Workflow Error
+
   +42_m_repair_history_header:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_header.yml

@@ -1,42 +1,43 @@
   
 #workflow_1  
   +1_m_customer_attribute_details: 1m
-  +3_m_customer_attribute_details_history: 1m
+  +3_m_customer_attribute_details_history: 2m
   +5_m_customer_attribute_value: 1m
   +7_m_customer_branch_parameters: 1m
-  +9_m_customer_branch_status:  1m
-  +11_m_customer_branch_status_history: 1m
+  +9_m_customer_branch_status:  2m  
   
   ### ตัวนี้ไม่มีใน daily นะ +6_m_customer_attribute_value_r: 6m
   
 #workflow_2
+  +11_m_customer_branch_status_history: 3m
   +13_m_customer_profile_address: 1m
-  +15_m_customer_profile_address_history: 1m
+  +15_m_customer_profile_address_history: 2m
   +17_m_customer_profile_contact: 1m
-  +19_m_customer_profile_contact_history: 1m
-  +21_m_customer_profiles: 1m
-  +23_m_customer_profiles_history: 1m    
-  
+  +19_m_customer_profile_contact_history: 1.30m
+
 #workflow_3  
+  +21_m_customer_profiles: 4.21m    
+  +23_m_customer_profiles_history: 1.22m    
   +25_m_cvip_answer_form_mapping_master_r:
-  +26_m_cvip_answers_detail:
+  +26_m_cvip_answers_detail: 2m
+
+#workflow_4  
   +28_m_cvip_answer_master_r:
   +29_m_cvip_brand_answers_detail:
-  +31_m_cvip_forms_header:  
-  +36_m_dealer_network_r:
-  
-#workflow_4  
-  +33_m_cvip_forms_configuration_r: 2.36m
+  +31_m_cvip_forms_header:  3m
+  +33_m_cvip_forms_configuration_r: 1m
   +34_m_cvip_question_form_mapping_master_r: 2m  
-  +35_m_cvip_question_master_r:
-  
+
 #workflow_5
+  +35_m_cvip_question_master_r:
+  +36_m_dealer_network_r: 2m
   +37_m_hr_employee_master:
   +38_m_model_information_r: 1.3m      
-  +39_m_quick_master_values:    
   +40_m_repair_history_details: 3m  
   
 #workflow_6  
+  +39_m_quick_master_values:    
+  
   +42_m_repair_history_header:  3m  
   +44_m_retail_sales_info:  
   +46_m_vehicle_dealer_group_parameters:
@@ -49,18 +50,21 @@ UPDATE
    +2_upd_m_customer_attribute_details_history:
    +3_upd_m_customer_attribute_values:
    +4_upd_m_customer_branch_parameters:
-   +5_upd_m_customer_branch_status_history:
+
    +6_upd_m_customer_branch_status:           
    
 #workflow_2   
+   +5_upd_m_customer_branch_status_history:
+
    +8_upd_m_customer_profile_address:   
    +7_upd_m_customer_profile_address_history:
    +9_upd_m_customer_profile_contact:
    +10_upd_m_customer_profile_contact_history:
    +11_upd_m_customer_profiles:
-   +12_upd_m_customer_profiles_history:
+   remove 12
    
 #workflow_3   
+   add +12_upd_m_customer_profiles_history:
    +13_upd_m_cvip_answers_detail:
    +14_upd_m_cvip_brand_answers_details:
    +15_upd_m_cvip_form_header:
