@@ -11,7 +11,7 @@ _export:
       - com.github.tamanyan:digdag-hangouts-chat:0.1.5
   webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
 
-  workflow_name: Service Appointment and Proactive Update
+  workflow_name: Mirai data to TD Onetime 
   ENV: develop
   td:
     database: mirai_data_to_td
@@ -37,10 +37,12 @@ _export:
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Attribute Details History Onetime Workflow Error
-
+	  
+  #modify value > values
+  #error
   +6_m_customer_attribute_value_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_value_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_values_r.yml
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Attribute Onetime Workflow Error
@@ -164,6 +166,7 @@ _export:
       mail>: ./mail_body_error.txt
       subject: CVIP Question Master Onetime Workflow Error
 
+  #Fix tabtab in select
   +36_m_dealer_network_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
@@ -179,6 +182,7 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Employee Master Workflow Error
 
+  #Fix tabtab in select
   +38_m_model_information_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
          embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_information_r.yml
@@ -228,3 +232,8 @@ _export:
     _error:
       mail>: ./mail_body_error.txt
       subject: Vehicle Master Onetime Workflow Error
+
++success_message:
+    mail>: ./TD_Mirai_data_to_TD_mail_body.txt
+    subject: Mirai data to TD Onetime  Workflow Success
+	  

@@ -31,7 +31,7 @@ in:
         CreatedDate as created_date,
         UpdatedBy as updated_by,
         UpdatedDate as updated_date
-        FROM VS.RetailSalesinfo
+        FROM TD.RetailSalesinfo
         WHERE UpdatedDate >= DATEADD(day, -14, GETDATE())
 
 filters:
