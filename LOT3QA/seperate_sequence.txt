@@ -73,7 +73,7 @@ UPDATE
    +15_upd_m_cvip_form_header:
    
 #workflow_5
-   +16_upd_m_repair_history_details:
+   +16_upd_m_repair_history_details:cd 
    
 #workflow_6   
    +17_upd_m_repair_history_header:

@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
-#schedule:
-#  daily>: 16:25:00
+schedule:
+  daily>: 08:00:00
 
 _export:
   mail:
@@ -47,12 +47,12 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Proactive Append Workflow Error
 
-#  +3_Prospect_booking_retail_sales:
-#    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
-#         embulk run ~/DIGDAG_TD/TD_Embulk/sale_analysis_append.yml
-#    _error:
-#      mail>: ./mail_body_error.txt
-#      subject: Prospect_booking_retail_sales Append Workflow Error
+  +3_Prospect_booking_retail_sales:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/sale_analysis_append.yml
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Prospect_booking_retail_sales Append Workflow Error
 
   +update_master_tables:
     _parallel: true
@@ -83,18 +83,18 @@ _export:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d tmp_model_database -T presto -q proactive_insertion_diff.sql
 
-#    +update_prospect_booking_retail_sales:
-#      _retry: 2
+    +update_prospect_booking_retail_sales:
+      _retry: 2
 
-#      +delete_diff_prospect_booking_retail_sales_data:
-#        sh>:
-#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-#             td query -d tmp_model_database -T presto -q prospect_booking_retail_sales_deletion_diff.sql#
+      +delete_diff_prospect_booking_retail_sales_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d tmp_model_database -T presto -q prospect_booking_retail_sales_deletion_diff.sql
 
-#      +insert_diff_prospect_booking_retail_sales_data:
-#        sh>:
-#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-#             td query -d tmp_model_database -T presto -q prospect_booking_retail_sales_insertion_diff.sql
+      +insert_diff_prospect_booking_retail_sales_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d tmp_model_database -T presto -q prospect_booking_retail_sales_insertion_diff.sql
 
 +success_message:
     mail>: ./TD_proactive_mail_body.txt
