@@ -62,12 +62,6 @@ _export:
       mail>: ./mail_body_error.txt
       subject: Customer Profile Contact Workflow Error
  
-  +19_m_customer_profile_contact_history:
-    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_history.yml
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profile Contact History Workflow Error
 
   +update_master_tables:
     _parallel: true
@@ -124,19 +118,6 @@ _export:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
              td query -d mirai_test_qa -T presto -q m_customer_profile_contact_insertion_diff.sql
-
-    +10_upd_m_customer_profile_contact_history:
-      _retry: 2
-
-      +delete_m_customer_profile_contact_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_history_deletion.sql
-
-      +insert_m_customer_profile_contact_history_data:
-        sh>:
-             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_history_insertion.sql
 
 +success_message:
     mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt

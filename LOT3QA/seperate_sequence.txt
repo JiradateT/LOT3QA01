@@ -10,15 +10,17 @@
   
 #workflow_2
   +11_m_customer_branch_status_history: 3m
-  +13_m_customer_profile_address: 1m
+  +13_m_customer_profile_address: 2.28m
   +15_m_customer_profile_address_history: 2m
-  +17_m_customer_profile_contact: 1m
-  +19_m_customer_profile_contact_history: 1.30m
+  +17_m_customer_profile_contact: 2m
+
 
 #workflow_3  
-  +21_m_customer_profiles: 4.21m    
-  +23_m_customer_profiles_history: 1.22m    
-  +25_m_cvip_answer_form_mapping_master_r:
+  +19_m_customer_profile_contact_history: 3.48m
+  
+  +21_m_customer_profiles: 2.38m    
+  +23_m_customer_profiles_history: 2m    
+  +25_m_cvip_answer_form_mapping_master_r: 2m
   +26_m_cvip_answers_detail: 2m
 
 #workflow_4  
@@ -27,16 +29,18 @@
   +31_m_cvip_forms_header:  3m
   +33_m_cvip_forms_configuration_r: 1m
   +34_m_cvip_question_form_mapping_master_r: 2m  
-
+  +36_m_dealer_network_r: 2m
+  
 #workflow_5
   +35_m_cvip_question_master_r:
-  +36_m_dealer_network_r: 2m
-  +37_m_hr_employee_master:
-  +38_m_model_information_r: 1.3m      
-  +40_m_repair_history_details: 3m  
+
+  +37_m_hr_employee_master: 2m
+  +38_m_model_information_r: 2m      
+  +39_m_quick_master_values:      
+  +40_m_repair_history_details: 4m  
   
 #workflow_6  
-  +39_m_quick_master_values:    
+  
   
   +42_m_repair_history_header:  3m  
   +44_m_retail_sales_info:  
@@ -50,29 +54,26 @@ UPDATE
    +2_upd_m_customer_attribute_details_history:
    +3_upd_m_customer_attribute_values:
    +4_upd_m_customer_branch_parameters:
-
    +6_upd_m_customer_branch_status:           
    
 #workflow_2   
    +5_upd_m_customer_branch_status_history:
-
-   +8_upd_m_customer_profile_address:   
+   
    +7_upd_m_customer_profile_address_history:
+   +8_upd_m_customer_profile_address:   
    +9_upd_m_customer_profile_contact:
+
+#workflow_3   
    +10_upd_m_customer_profile_contact_history:
    +11_upd_m_customer_profiles:
-   remove 12
-   
-#workflow_3   
-   add +12_upd_m_customer_profiles_history:
+   +12_upd_m_customer_profiles_history:
    +13_upd_m_cvip_answers_detail:
+   
+#workflow_4
    +14_upd_m_cvip_brand_answers_details:
    +15_upd_m_cvip_form_header:
    
-#workflow_4
-
 #workflow_5
-
    +16_upd_m_repair_history_details:
    
 #workflow_6   

@@ -73,6 +73,15 @@ _export:
       mail>: ./mail_body_error.txt
       subject: CVIP Question Form Mapping Master Onetime Workflow Error
 
+  #AllData use in append + onetime
+  ##Fix tabtab in select
+  +36_m_dealer_network_r:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Dealer Network Onetime Workflow Error
+
   +update_master_tables:
     _parallel: true
 
