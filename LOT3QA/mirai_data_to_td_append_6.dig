@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
 schedule:
-  daily>: 08:25:00
+  daily>: 06:00:00
 
 _export:
   mail:
@@ -36,7 +36,7 @@ _export:
   #workflow_6
   +42_m_repair_history_header:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_header.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_header.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Repair History Header Workflow Error
@@ -44,7 +44,7 @@ _export:
   # Modify selet VS to TD
   +44_m_retail_sales_info:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_retail_sales_info.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_retail_sales_info.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Retail Sales Info Workflow Error
@@ -52,14 +52,14 @@ _export:
   # Modify tabatab in selet
   +46_m_vehicle_dealer_group_parameters:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_dealer_group_parameters.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_dealer_group_parameters.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Vehicle Dealer Group parameter Workflow Error
 
   +48_m_vehicle_master:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_master.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_vehicle_master.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Vehicle Master Workflow Error

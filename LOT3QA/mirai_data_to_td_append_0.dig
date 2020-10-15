@@ -19,7 +19,7 @@ _export:
   workflow_name: Service Appointment and Proactive and Prospect_booking_retail_sales
   ENV: develop
   td:
-    database: tmp_model_database
+    database: mirai_test_qa
   
 +start_message:
   sh>: echo start Service Appointment and Proactive and Prospect_booking_RS
@@ -35,21 +35,21 @@ _export:
 
   +1_service_appointment:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
-         embulk run ~/DIGDAG_TD/TD_Embulk/service_appointment_append.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/service_appointment_append.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Serivce Appointment Append Workflow Error
 
   +2_Proactive:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;  
-         embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Proactive Append Workflow Error
 
   +3_Prospect_booking_retail_sales:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
-         embulk run ~/DIGDAG_TD/TD_Embulk/sale_analysis_append.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/sale_analysis_append.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Prospect_booking_retail_sales Append Workflow Error
@@ -63,12 +63,12 @@ _export:
       +delete_diff_serivce_appointment_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q service_appointment_deletion_diff.sql
+             td query -d mirai_test_qa -T presto -q service_appointment_deletion_diff.sql
 
       +insert_diff_service_appointment_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q service_appointment_insertion_diff.sql
+             td query -d mirai_test_qa -T presto -q service_appointment_insertion_diff.sql
 
     +update_proactive:
       _retry: 2
@@ -76,12 +76,12 @@ _export:
       +delete_diff_m_proactive_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q proactive_deletion_diff.sql
+             td query -d mirai_test_qa -T presto -q proactive_deletion_diff.sql
 
       +insert_diff_m_proactive_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q proactive_insertion_diff.sql
+             td query -d mirai_test_qa -T presto -q proactive_insertion_diff.sql
 
     +update_prospect_booking_retail_sales:
       _retry: 2
@@ -89,12 +89,12 @@ _export:
       +delete_diff_prospect_booking_retail_sales_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q prospect_booking_retail_sales_deletion_diff.sql
+             td query -d mirai_test_qa -T presto -q prospect_booking_retail_sales_deletion_diff.sql
 
       +insert_diff_prospect_booking_retail_sales_data:
         sh>:
              cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
-             td query -d tmp_model_database -T presto -q prospect_booking_retail_sales_insertion_diff.sql
+             td query -d mirai_test_qa -T presto -q prospect_booking_retail_sales_insertion_diff.sql
 
 +success_message:
     mail>: ./TD_proactive_mail_body.txt

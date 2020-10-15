@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
 schedule:
-  daily>: 08:25:00
+  daily>: 06:00:00
 
 _export:
   mail:
@@ -36,28 +36,28 @@ _export:
   #workflow_2
   +11_m_customer_branch_status_history:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Branch Status History Workflow Error
 
   +13_m_customer_profile_address:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Profile Address Workflow Error
 
   +15_m_customer_profile_address_history:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address_history.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address_history.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Profile Address History Workflow Error
 
   +17_m_customer_profile_contact:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Profile Contact Workflow Error

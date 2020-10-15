@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
 schedule:
-  daily>: 08:25:00
+  daily>: 06:00:00
 
 _export:
   mail:
@@ -37,14 +37,14 @@ _export:
   #AllData use in append + onetime
   +28_m_cvip_answer_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_master_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_master_r.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Answer Master Onetime Workflow Error
 
   +29_m_cvip_brand_answers_detail:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_brand_answers_detail.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_brand_answers_detail.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Brand Answers Detail Workflow Error
@@ -52,7 +52,7 @@ _export:
   # modify forms > form 
   +31_m_cvip_forms_header:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_form_header.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_form_header.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Forms Header Workflow Error
@@ -60,7 +60,7 @@ _export:
   #AllData use in append + onetime
   +33_m_cvip_forms_configuration_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Forms Configuration Onetime Workflow Error
@@ -68,7 +68,7 @@ _export:
   #AllData use in append + onetime
   +34_m_cvip_question_form_mapping_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_question_form_mapping_master_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_question_form_mapping_master_r.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Question Form Mapping Master Onetime Workflow Error
@@ -77,7 +77,7 @@ _export:
   ##Fix tabtab in select
   +36_m_dealer_network_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Dealer Network Onetime Workflow Error

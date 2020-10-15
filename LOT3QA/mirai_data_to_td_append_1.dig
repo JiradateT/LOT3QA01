@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
 schedule:
-  daily>: 08:25:00
+  daily>: 06:00:00
 
 _export:
   mail:
@@ -35,14 +35,14 @@ _export:
   #workflow_1
   +1_m_customer_attribute_details:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Attribute Details Workflow Error
 
   +3_m_customer_attribute_details_history:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details_history.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_details_history.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Attribute Details History Workflow Error
@@ -51,7 +51,7 @@ _export:
   #error column : customer_image
   +5_m_customer_attribute_value:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_values.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_attribute_values.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Attribute Workflow Error
@@ -59,14 +59,14 @@ _export:
   #modify driver path
   +7_m_customer_branch_parameters:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_parameters.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_parameters.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Branch Workflow Error
 
   +9_m_customer_branch_status:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Branch Status Workflow Error

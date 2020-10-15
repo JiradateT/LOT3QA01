@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
 schedule:
-  daily>: 08:25:00
+  daily>: 06:00:00
 
 _export:
   mail:
@@ -37,7 +37,7 @@ _export:
   #AllData use in append + onetime
   +35_m_cvip_question_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_questions_master_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_questions_master_r.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Question Master Onetime Workflow Error
@@ -45,7 +45,7 @@ _export:
   #AllData use in append + onetime
   +37_m_hr_employee_master:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_hr_employee_master.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_hr_employee_master.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Employee Master Workflow Error
@@ -54,7 +54,7 @@ _export:
   ##Fix tabtab in select
   +38_m_model_information_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_information_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_information_r.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Model Information Onetime Workflow Error
@@ -62,14 +62,14 @@ _export:
   #AllData use in append + onetime
   +39_m_quick_master_values:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_quick_master_values.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_quick_master_values.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Quick Master Values Workflow Error
 
   +40_m_repair_history_details:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Repair History Details Workflow Error

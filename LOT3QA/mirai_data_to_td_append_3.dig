@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
 schedule:
-  daily>: 08:25:00
+  daily>: 06:00:00
 
 _export:
   mail:
@@ -36,21 +36,21 @@ _export:
   #workflow_3 
   +19_m_customer_profile_contact_history:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_history.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_history.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Profile Contact History Workflow Error
 
   +21_m_customer_profiles:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Profiles Workflow Error
 
   +23_m_customer_profiles_history:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: Customer Profiles History Workflow Error
@@ -58,14 +58,14 @@ _export:
   #AllData use in append + onetime
   +25_m_cvip_answer_form_mapping_master_r:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answer_form_mapping_master_r.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answer_form_mapping_master_r.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Answer Form Mapping Master Onetime Workflow Error
 
   +26_m_cvip_answers_detail:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_detail.yml
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_detail.yml.liquid
     _error:
       mail>: ./mail_body_error.txt
       subject: CVIP Answer Details Workflow Error
