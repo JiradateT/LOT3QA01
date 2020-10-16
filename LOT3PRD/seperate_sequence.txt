@@ -1,0 +1,82 @@
+  
+#workflow_1  
+  +1_m_customer_attribute_details: 1m
+  +3_m_customer_attribute_details_history: 2m
+  +5_m_customer_attribute_value: 1m
+  +7_m_customer_branch_parameters: 1m
+  +9_m_customer_branch_status:  2m  
+  
+  ### ตัวนี้ไม่มีใน daily นะ +6_m_customer_attribute_value_r: 6m
+  
+#workflow_2
+  +11_m_customer_branch_status_history: 3m
+  +13_m_customer_profile_address: 2.28m
+  +15_m_customer_profile_address_history: 2m
+  +17_m_customer_profile_contact: 2m
+
+
+#workflow_3  
+  +19_m_customer_profile_contact_history: 3.48m
+  
+  +21_m_customer_profiles: 2.38m    
+  +23_m_customer_profiles_history: 2m    
+  +25_m_cvip_answer_form_mapping_master_r: 2m
+  +26_m_cvip_answers_detail: 2m
+
+#workflow_4  
+  +28_m_cvip_answer_master_r:
+  +29_m_cvip_brand_answers_detail:
+  +31_m_cvip_forms_header:  3m
+  +33_m_cvip_forms_configuration_r: 1m
+  +34_m_cvip_question_form_mapping_master_r: 2m  
+  +36_m_dealer_network_r: 2m
+  
+#workflow_5
+  +35_m_cvip_question_master_r:
+
+  +37_m_hr_employee_master: 2m
+  +38_m_model_information_r: 2m      
+  +39_m_quick_master_values:      
+  +40_m_repair_history_details: 4m  
+  
+#workflow_6  
+  
+  +42_m_repair_history_header:  3m  
+  +44_m_retail_sales_info:  
+  +46_m_vehicle_dealer_group_parameters:
+  +48_m_vehicle_master: 1.36m
+
+  
+UPDATE
+#workflow_1
+   +1_upd_m_customer_attribute_details: 
+   +2_upd_m_customer_attribute_details_history:
+   +3_upd_m_customer_attribute_values:
+   +4_upd_m_customer_branch_parameters:
+   +6_upd_m_customer_branch_status:           
+   
+#workflow_2   
+   +5_upd_m_customer_branch_status_history:
+   
+   +7_upd_m_customer_profile_address_history:
+   +8_upd_m_customer_profile_address:   
+   +9_upd_m_customer_profile_contact:
+
+#workflow_3   
+   +10_upd_m_customer_profile_contact_history:
+   +11_upd_m_customer_profiles:
+   +12_upd_m_customer_profiles_history:
+   +13_upd_m_cvip_answers_detail:
+   
+#workflow_4
+   +14_upd_m_cvip_brand_answers_details:
+   +15_upd_m_cvip_form_header:
+   
+#workflow_5
+   +16_upd_m_repair_history_details:cd 
+   
+#workflow_6   
+   +17_upd_m_repair_history_header:
+   +18_upd_m_retail_sales_info:
+   +19_upd_m_vehicle_dealer_group_parameters:
+   +20_upd_m_vehicle_master:  

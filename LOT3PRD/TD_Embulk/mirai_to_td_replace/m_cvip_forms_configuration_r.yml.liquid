@@ -1,0 +1,31 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 3000
+  query: |
+    SELECT
+        CVIPConfigurationId as cvip_configuration_id,
+        CustomerType as customer_type,
+        PurchaseType as purchase_type,
+        ModelGroupId as model_group_id,
+        VehicleTypeId as vehicle_type_id,
+        CVIPFormCode as cvip_form_code,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedBy as updated_by,
+        UpdatedDate as updated_date
+        FROM TD.CVIPFormsConfiguration
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
+  database: {{out_database}}, table: r_cvip_forms_configuration, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}

@@ -1,0 +1,33 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 3000
+  query: |
+    SELECT
+        CVIPBrandAnswersDetailId as cvip_brand_answers_detail_id,
+        CVIPAnswersDetailId as cvip_answers_detail_id,
+        BrandId as brand_id,
+        BrandRemarkText as brand_remark_text,
+        VehicleTypeId as vehicle_type_id,
+        VehicleTypeRemarkText as vehicle_type_remark_text,
+        UsageId as usage_id,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedDate as updated_date,
+        UpdatedBy as updated_by
+        FROM TD.CVIPBrandAnswersDetail
+        WHERE UpdatedDate >= DATEADD(day, -14, GETDATE())
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
+  database: {{out_database}}, table: diff_r_cvip_brand_answers_detail, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}

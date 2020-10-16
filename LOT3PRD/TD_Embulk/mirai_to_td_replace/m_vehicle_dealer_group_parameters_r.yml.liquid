@@ -1,0 +1,41 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 3000
+  query: |
+    SELECT
+        VINId as vin_id,
+        IsOEMVehicle as is_oem_vehicle,
+        DealerGroupId as dealer_group_id,
+        ServiceProfileId as service_profile_id,
+        SalesProfileId as sales_profile_id,
+        BodyBuilderId as body_builder_id,
+        UserProfileId as user_profile_id,
+        IsUnlocked as is_unlocked,
+        UnlockDate as unlock_date,
+        IsROGenrated as is_ro_generated,
+        ServiceDate as service_date,
+        OwnerProfileId as owner_profile_id,
+        RearBodyTypeID as rear_body_type_id,
+        RunningPerDay as running_per_day,
+        CustomerProfilesHistoryId as customer_profiles_history_id,
+        PreviousOwnerProfileId as previous_owner_profile_id,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedBy as updated_by,
+        UpdatedDate as updated_date
+        FROM TD.VehicleDealerGroupParameters
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
+  database: {{out_database}}, table: r_vehicle_dealer_group_parameters, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}

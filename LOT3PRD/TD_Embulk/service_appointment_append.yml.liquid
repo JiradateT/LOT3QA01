@@ -1,0 +1,68 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 30000
+  query: |
+    SELECT
+    DISTINCT
+    SNO as sno,
+    AppointmentID as appointment_id,
+    VehicleType as vehicle_type,
+    VehicleCategory as vehicle_category,
+    DealerGroup as dealer_group,
+    DealerName as dealer_name,
+    BranchName as branch_name,
+    Appointmentcreator as appointment_creator,
+    Customertype as customer_type,
+    CustomerCode as customer_code,
+    CustomerName as customer_name,
+    OwnerContactNumber as owner_contact_number,
+    PreferredContactTimeFrom as preferred_contact_time_from,
+    PreferredContactTimeTo as preferred_contact_time_to,
+    UserName as user_name,
+    UserPhone as user_phone,
+    DriverName as driver_name,
+    DriverContactNo as driver_contact_no,
+    ContactPersonName as contact_person_name,
+    ContactPersonPosition as contact_person_position,
+    ContactPersonContactNumber as contact_person_contact_number,
+    DISTRICT as district,
+    SUBDISTRICT as sub_district,
+    PROVINCE as province,
+    CustomerRank as customer_rank,
+    CustomerClassification as customer_classification,
+    MODELMARKETINGNAME as model_marketing_name,
+    VinNo as vin_no,
+    EngineNo as engine_no,
+    LicensePlateNo as license_plate_no,
+    DeliveryDate as delivery_date,
+    RODate as ro_date,
+    InvoiceDate as invoice_date,
+    Mileage as mileage,
+    JobType as job_type,
+    AppointmentDate as appointment_date,
+    AppointmentTime as appointment_time,
+    AppointmentType as appointment_type,
+    Vehicleclassification as vehicle_classification,
+    VehicleWarranty as vehicle_warranty,
+    CustomerSourceType as customer_source_type,
+    SourceofAppointedCustomer as source_of_appointed_customer,
+    Timingofattendingservicein as timimg_of_attending_service_in,
+    Occupation as occupation,
+    BusinessType as business_type,
+    UpdatedDate as updated_date
+    FROM TD.VW_CRM_Appointment
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
+  database: {{out_database}}, table: diff_service_appointment_test, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}

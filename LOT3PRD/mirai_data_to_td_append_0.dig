@@ -1,0 +1,101 @@
+timezone: Asia/Bangkok
+
+schedule:
+  daily>: 06:00:00
+
+_export:
+  mail:
+    from: TD_Interface@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [pattharin_b@tripetch-it.co.th, jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Service Appointment and Proactive and Prospect_booking_retail_sales
+  ENV: develop
+  td:
+    database: mirai_raw
+  
++start_message:
+  sh>: echo start Service Appointment and Proactive and Prospect_booking_RS
+
++current_loc:
+  sh>: pwd
+  
++start_email:
+  mail>: ./TD_proactive_mail_body.txt
+  subject: Service Appointment and Proactive and Prospect_booking_RS Workflow Started
+
++mirai_data_to_td_lot1_2_append:
+
+  +1_service_appointment:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/service_appointment_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Serivce Appointment Append Workflow Error
+
+  +2_Proactive:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;  
+         embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Proactive Append Workflow Error
+
+  +3_Prospect_booking_retail_sales:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/sale_analysis_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Prospect_booking_retail_sales Append Workflow Error
+
+  +update_master_tables:
+    _parallel: true
+
+    +update_service_appointment:
+      _retry: 2
+
+      +delete_diff_serivce_appointment_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q service_appointment_deletion_diff.sql
+
+      +insert_diff_service_appointment_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q service_appointment_insertion_diff.sql
+
+    +update_proactive:
+      _retry: 2
+
+      +delete_diff_m_proactive_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q proactive_deletion_diff.sql
+
+      +insert_diff_m_proactive_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q proactive_insertion_diff.sql
+
+    +update_prospect_booking_retail_sales:
+      _retry: 2
+
+      +delete_diff_prospect_booking_retail_sales_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q prospect_booking_retail_sales_deletion_diff.sql
+
+      +insert_diff_prospect_booking_retail_sales_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q prospect_booking_retail_sales_insertion_diff.sql
+
++success_message:
+    mail>: ./TD_proactive_mail_body.txt
+    subject: Service Appointment and Proactive and Prospect_booking_RS Workflow Success

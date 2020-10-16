@@ -1,0 +1,2 @@
+INSERT INTO r_customer_profiles_history
+SELECT * FROM diff_r_customer_profiles_history

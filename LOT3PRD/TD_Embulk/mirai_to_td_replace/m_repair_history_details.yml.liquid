@@ -1,0 +1,69 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 40000
+  query: |
+    select
+      BranchCode AS branch_code,
+      RepairOrderNumber AS repair_order_number,
+      TransactionType AS transaction_type,
+      ReceiptYear AS receipt_year,
+      ReceiptNumber AS receipt_number,
+      TaxInvoiceNo AS tax_invoice_no,
+      InvoiceNo AS invoice_no,
+      ItemNumber AS item_number,
+      RecordType AS record_type,
+      RecordCode AS record_code,
+      RecordDescription AS record_description,
+      WarrantyGroupCode AS warranty_group_code,
+      WarrantyTIS AS warranty_tis,
+      WarrantyType AS warranty_type,
+      SymptomCode AS symptom_code,
+      SymptomDescription AS symptom_description,
+      Cond AS cond,
+      NetQuantity AS net_quantity,
+      ClaimNumber AS claim_number,
+      ClaimYear AS claim_year,
+      DiscountRate AS discount_rate,
+      DiscountAmount AS discount_amount,
+      SellAmount AS sell_amount,
+      NetAmount AS net_amount,
+      CostAmount AS cost_amount,
+      Kind AS kind,
+      Fee AS fee,
+      CSProductCampaignCode AS cs_product_campaign_code,
+      SubJob AS sub_job,
+      Additional AS additional,
+      IssueTypeID AS issue_type_id,
+      MechanicEmpID AS mechanic_emp_id,
+      MechanicName AS mechanic_name,
+      RepairHistoryDetailID AS repair_history_detail_id,
+      RepairHistoryHeaderID AS repair_history_header_id,
+      UOMUnit AS uom_unit,
+      CSProductCampaignResultCode AS cs_product_campaign_result_code,
+      LTGId AS ltg_id,
+      PartId AS part_id,
+      SubContractId AS sub_contract_id,
+      BaseQuantity AS base_quantity,
+      IsPending AS is_pending,
+      DealerDescription AS dealer_description,
+      CreatedBy AS created_by,
+      CreatedDate AS created_date,
+      UpdatedBy AS updated_by,
+      UpdatedDate AS updated_date
+      from TD.RepairHistoryDetails
+      WHERE UpdatedDate >= DATEADD(day, -14, GETDATE())
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
+  database: {{out_database}}, table: diff_r_repair_history_details, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}

@@ -1,0 +1,2 @@
+INSERT INTO r_customer_branch_parameters
+SELECT * FROM diff_r_customer_branch_parameters
