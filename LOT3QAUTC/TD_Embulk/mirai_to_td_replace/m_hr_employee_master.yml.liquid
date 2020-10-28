@@ -1,0 +1,66 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 3000
+  query: |
+    SELECT
+        EmpId as emp_id,
+        EmpCode as emp_code,
+        DealerCompanyId as dealer_company_id,
+        BranchId as branch_id,
+        SecondaryEmpCode as secondary_emp_code,
+        FirstName as first_name,
+        MiddleName as middle_name,
+        LastName as last_name,
+        TrainingLevel as training_level,
+        OldEmpId as old_emp_id,
+        ReferenceEmpId as reference_emp_id,
+        PersonalId as personal_id,
+        SalesCode as slaes_code,
+        FirstNameSecondLanguage as first_name_second_language,
+        MiddleNameSecondLanguage as middle_name_second_language,
+        LastNameSecondLanguage as last_name_second_language,
+        NickName as nickname,
+        Height as height,
+        Weight as weight,
+        BloodGroup as blood_group,
+        Gender as gender,
+        DateOfBirth as date_of_birth,
+        BirthPlace as birth_place,
+        MilitaryStatus as military_status,
+        MaritalStatus as marital_status,
+        Nationality as nationality,
+        Race as race,
+        Religion as religion,
+        BusinessMobNo as business_mob_no,
+        PrivateMobNo as private_mob_no,
+        HomeTelNo as home_tel_no,
+        HomeTelExt as home_tel_ext,
+        FaxNo as fax_no,
+        PrivateEmail as private_email,
+        PrivateVehicle as private_vehicle,
+        LMV as lmv,
+        Trailor as trailor,
+        HMV as hmv,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedBy as updated_by,
+        UpdatedDate as updated_date,
+        EmpSalutation as emp_salutation,
+        SalutationTH as salutation_th,
+        EmpSalutationId as emp_salutation_id
+        FROM TD.EmployeeMaster
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
+  database: {{out_database}}, table: r_hr_employee_master, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
+    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}

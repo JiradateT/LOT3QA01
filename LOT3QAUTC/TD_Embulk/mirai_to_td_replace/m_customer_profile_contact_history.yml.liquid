@@ -1,0 +1,73 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 30000
+  query: |
+    SELECT
+    DISTINCT 
+    CustomerProfileContactHistoryId as customer_profile_contact_history_id,
+    ProfileId as profile_id,
+    Contact1 as contact1,
+    Contact2 as contact2,
+    Contact3 as contact3,
+    Contact4 as contact4,
+    Contact5 as contact5,
+    Contact6 as contact6,
+    Contact7 as contact7,
+    Contact8 as contact8,
+    Contact9 as contact9,
+    Contact10 as contact10,
+    IsActive as is_active,
+    PreferredContactRemarks as preferred_contact_remarks,
+    PreferredContactTimeFrom as preferred_contact_time_from,
+    PreferredContactTimeTo as preferred_contact_time_to,
+    PreferredContactChannel as preferred_contact_channel,
+    PrimaryContactNumber as primary_contact_number,
+    WrongNumberFlag as wrong_number_flag,
+    CustomerProfilesHistoryId as customer_profiles_history_id,
+    CreatedBy as created_by,
+    CreatedDate as created_date,
+    UpdatedBy as updated_by,
+    UpdatedDate as updated_date
+    FROM TD.CustomerProfileContactHistory
+    WHERE UpdatedDate >= DATEADD(day, -14, GETDATE())
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: diff_r_customer_profile_contact_history
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    preferred_contact_time_from:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    preferred_contact_time_to:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'

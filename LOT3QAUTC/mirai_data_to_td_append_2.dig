@@ -1,0 +1,124 @@
+timezone: Asia/Bangkok
+
+schedule:
+  daily>: 06:00:00
+
+_export:
+  mail:
+    from: TD_InterfaceQA@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Mirai data to TD Daily
+  ENV: develop
+  td:
+    database: mirai_data_to_td
+  
++start_message:
+  sh>: echo start Mirai data to TD
+
++current_loc:
+  sh>: pwd
+
++start_email:
+  mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+  subject: Mirai data to TD Workflow 2 Daily Started 
+
++mirai_data_to_td_append:
+
+  #workflow_2
+  +11_m_customer_branch_status_history:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_branch_status_history.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Customer Branch Status History Workflow Error
+
+  +13_m_customer_profile_address:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Customer Profile Address Workflow Error
+
+  +15_m_customer_profile_address_history:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_address_history.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Customer Profile Address History Workflow Error
+
+  +17_m_customer_profile_contact:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Customer Profile Contact Workflow Error
+ 
+
+  +update_master_tables:
+    _parallel: true
+
+    #workflow_2
+    +5_upd_m_customer_branch_status_history:
+      _retry: 2
+
+      +delete_m_customer_branch_status_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_deletion.sql
+
+      +insert_m_customer_branch_status_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_branch_status_history_insertion.sql
+
+    +7_upd_m_customer_profile_address_history:
+      _retry: 2
+
+      +delete_m_customer_profile_address_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_profile_address_history_deletion.sql
+
+      +insert_m_customer_profile_address_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_profile_address_history_insertion.sql
+
+    +8_upd_m_customer_profile_address:
+      _retry: 2
+
+      +delete_diff_m_customer_profile_address_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_profile_address_deletion_diff.sql
+
+      +insert_diff_m_customer_profile_address_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_profile_address_insertion_diff.sql
+
+    +9_upd_m_customer_profile_contact:
+      _retry: 2
+
+      +delete_diff_m_customer_profile_contact_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_deletion_diff.sql
+
+      +insert_diff_m_customer_profile_contact_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_customer_profile_contact_insertion_diff.sql
+
++success_message:
+    mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+    subject: Mirai data to TD Workflow 2 Daily Success 

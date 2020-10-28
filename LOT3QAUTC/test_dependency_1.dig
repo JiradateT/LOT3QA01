@@ -1,0 +1,41 @@
+timezone: Asia/Bangkok
+
+#schedule:
+#  daily>: 11:00:00
+
+_export:
+  mail:
+    from: TD_InterfaceQA@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Dependencie another workflow Test
+  ENV: develop
+  td:
+    database: mirai_data_to_td
+
++start_message:
+  sh>: echo start Dependencie another workflow Test
+
++current_loc:
+  sh>: pwd
+
++depend_on_all_daily_workflow_in_month:
+  # 2 = yesterday Run ?? , 1 = today
+  loop>: 1
+  _do:
+    require>: mirai_data_to_td_append_0
+    session_time: ${moment().add(i-1*i, 'days').startOf('days').format()}
+    ## workaround : this code return '2017-11-17T00:00:000Z' but i got the error 
+    ## Invalid ISO time format: %s"2017-11-17T00:00:000Z" (json mapping)
+
++test_main:
+    echo>: hello
+    echo>: ${moment().add(i-1*i, 'days').startOf('days').format()}
