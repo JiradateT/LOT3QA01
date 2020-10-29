@@ -1,7 +1,7 @@
 timezone: Asia/Bangkok
 
-schedule:
-  daily>: 11:00:00
+#schedule:
+#  daily>: 11:00:00
 
 _export:
   mail:
