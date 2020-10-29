@@ -88,6 +88,48 @@ filters:
 - type: add_time
   to_column: {name: time, type: timestamp}
   from_value: {mode: upload_time}
-out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
-  database: {{out_database}}, table: r_vehicle_master, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
-    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}
+
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: r_vehicle_master
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    delivery_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    action_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    transport_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    cancel_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    gps_installed_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    last_service_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'

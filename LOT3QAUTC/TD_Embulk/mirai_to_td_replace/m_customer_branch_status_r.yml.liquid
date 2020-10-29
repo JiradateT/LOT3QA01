@@ -26,6 +26,24 @@ filters:
 - type: add_time
   to_column: {name: time, type: timestamp}
   from_value: {mode: upload_time}
-out: {type: td, apikey: {{out_APIKEY}}, endpoint: api.treasuredata.com,
-  database: {{out_database}}, table: r_customer_branch_status, time_column: time, mode: replace, default_timestamp_format: '%Y-%m-%d
-    %H:%M:%S', stamp_format: '%Y-%m-%d %H:%M:%S'}
+
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: r_customer_branch_status
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
