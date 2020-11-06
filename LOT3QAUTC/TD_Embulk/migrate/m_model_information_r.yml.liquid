@@ -9,6 +9,147 @@ in:
   database: {{mig_in_database}}
   fetch_rows: 3000
   query: |
+    with aa as (
+    SELECT   
+         MD.ModelId
+        ,MM.ModelMasterId
+        ,MM.ModelCode
+        ,MM.ModelName
+        ,MM.ModelShortName
+        ,MD.ModelYear
+        ,MM.IsActive AS ModelMaster_IsActive
+
+        ,MG.ModelGroupId
+        ,MG.ModelGroupCode
+        ,MG.ModelGroupDescription
+
+        ,MCM.ModelColorId
+        ,MCM.ModelColorCode
+        ,MCM.ModelColorName
+
+        ,CTM.ColorTypeId
+        ,CTM.ColorTypeCode
+        ,CTM.Description
+
+        ,MOM.ModelOptionId
+        ,MOM.ModelOptionCode
+        ,MOM.ModelOptionName
+
+        ,MD.FuelTypeId
+        ,MD.EngineModel
+        ,MD.FuelSplTypeId
+        ,MD.NoOfCylinders
+        ,MD.NoOfHPMarket
+        ,MD.ThaiModelNameId
+        ,MD.DisplacementActual
+        ,MD.DisplacementMarket
+        ,MD.TransmissionId
+        ,MD.SteeringId
+        ,MD.DoorId
+        ,MD.AirbagId
+        ,MD.AbsId
+        ,MD.DriveSystemId
+        ,MD.HeadLampId
+        ,MD.HorsePower
+        ,MD.WbaseTypeId
+        ,MD.Wbase
+        ,MD.SeriesName
+        ,MD.GrossVehicleWeight
+        ,MD.EngineTurboCooler
+        ,MD.SeatType
+        ,MD.VersionName
+        ,MD.CabType
+        ,MD.Torque
+        ,MD.Feature
+        ,MD.TonClassId
+        ,MD.FinalTypeId
+        ,MD.SpecialSpecId
+        ,MD.RevisionId
+        ,MD.Tire
+        ,MD.TransmissionSpeed
+        ,MD.GrossCombinationWeight
+        ,MD.ColorInterior
+        ,MD.SeatColor
+        ,MD.LeaseMaintennacePackageId
+        ,MD.IsAccessoryFlag
+        ,MD.FutureUseId
+        ,MD.VehicleTypeId
+        ,LMLV1.ListValue AS VehicleType
+        ,MD.Segment1Code
+        ,MD.Segment2
+        ,MD.SubModelGroup1
+        ,MSG1.ModelSubGroupCode        	 AS ModelSubGroup1_Code
+        ,MSG1.ModelSubGroupDescription	 AS ModelSubGroup1_Description
+
+        ,MD.SubModelGroup2
+        ,MSG2.ModelSubGroupCode        	  AS ModelSubGroup2_Code
+        ,MSG2.ModelSubGroupDescription	  AS ModelSubGroup2_Description
+
+        ,MD.FactoryGrade
+        ,MD.GenGradeId
+        ,MD.Class1MarketingGrade
+        ,MD.Class2MarketingName
+        ,MD.HorsePowerType
+        ,MD.GearMarketName
+        ,MD.EuropeanEmissionStd
+        ,MD.Audio
+        ,MD.DevelopCode
+        ,MD.GPSContractId
+        ,MD.CabSuspensionId
+        ,MD.HiRideId
+        ,MD.FuelTypeSdId
+        ,MD.SuffixCode
+        ,MD.BomSetOptionId
+        ,MD.BomPrice
+        ,MD.BrandId
+        ,MD.SalesRecordModel
+        ,MD.VwVehicleWeight
+        ,MD.SpecialSpecProdId
+        ,MD.FinalGearRatio
+        ,MD.StickerTypeId
+        ,MD.LTGGroup
+        ,MD.OwnerManual
+        ,MD.PartCatalog
+        ,MD.BreakSystemId
+        ,MD.ModelGroupForSalesTarget
+        ,MD.SpecialToolsCatalog
+        ,MD.ParentCodeId
+        ,MD.WorkshopManual
+        ,MD.MmVariantCondition
+        ,MD.SdVariantCondition1
+        ,MD.WarrantyVariantCondition
+        ,MD.SdVariantCondition2
+        ,MD.SdVariantCondition3
+        ,MD.BomSetByModelId
+        ,MD.SdVariantCondition4
+        ,MD.ProductModelName
+        ,MD.BookNumber
+        ,MD.OrderEffectiveFrom
+        ,MD.OrderEffectiveTo
+        ,MD.SalesEffectiveFrom
+        ,MD.SalesEffectiveTo
+        ,MD.SpecialModelFlag
+        ,MD.AccessoryFlagDescription
+        ,MD.GenGradeDescription
+        ,MD.BKEffectiveDate
+        ,MD.RSEffectiveDate
+
+        ,MG.IsActive AS ModelGroup_IsActive
+        ,MOM.IsActive AS ModelOption_IsActive
+        ,MCM.IsActive AS ModelColor_IsActive
+
+    FROM CM.ModelDetails MD WITH (NOLOCK) 
+     LEFT JOIN CM.ModelMaster MM WITH (NOLOCK) ON MM.ModelMasterId = MD.ModelMasterId 
+     LEFT JOIN CM.ModelGroups MG WITH (NOLOCK) ON MG.ModelGroupId = MD.ModelGroupId 
+     LEFT JOIN CM.ModelColorMaster MCM WITH (NOLOCK) ON MCM.ModelColorId = MD.ModelColorId
+     LEFT JOIN CM.ColorTypeMaster CTM WITH (NOLOCK) ON CTM.ColorTypeId = MD.ColorTypeId
+
+     LEFT JOIN CM.LOVMasterLanguageValues LMLV1 WITH (NOLOCK) ON LMLV1.LanguageId = 'EN-US' AND LMLV1.ListRecordId = MD.VehicleTypeId
+
+     LEFT JOIN CM.ModelOptionMaster MOM WITH (NOLOCK) ON MOM.ModelOptionId = MD.ModelOptionId
+     LEFT JOIN CM.ModelSubGroups MSG1 WITH (NOLOCK) ON MSG1.ModelSubGroupId = MD.SubModelGroup1
+     LEFT JOIN CM.ModelSubGroups MSG2 WITH (NOLOCK) ON MSG2.ModelSubGroupId = MD.SubModelGroup2
+    )
     SELECT
         ModelId as model_id,
         ModelCode as model_code,
@@ -127,7 +268,7 @@ in:
         ModelGroup_IsActive as model_group_is_active,
         ModelOption_IsActive as model_option_is_active,
         ModelColor_IsActive as model_color_is_active
-        FROM TD.VW_CM_ModelInformation
+    from aa
 
 filters:
 - type: add_time

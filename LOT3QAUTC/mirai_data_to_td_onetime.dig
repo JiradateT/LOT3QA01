@@ -93,7 +93,7 @@ _export:
 #         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_contact_r.yml.liquid
 #    _error:
 #      mail>: ./mail_body_error.txt
-      subject: Customer Profile Contact Onetime Workflow Error
+#      subject: Customer Profile Contact Onetime Workflow Error
 
 #  +20_m_customer_profile_contact_history_r:
 #    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
