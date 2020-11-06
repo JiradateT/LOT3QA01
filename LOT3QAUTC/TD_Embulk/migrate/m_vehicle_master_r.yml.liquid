@@ -1,0 +1,135 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{mig_in_host}}
+  user: {{mig_in_user}}
+  password: {{mig_in_password}}
+  database: {{mig_in_database}}
+  fetch_rows: 3000
+  query: |
+    SELECT
+        VINId as vin_id,
+        VINNo as vin_no,
+        ModelId as model_id,
+        BranchId as branch_id,
+        DNCutNo as dn_cut_no,
+        DNCutDate as dn_cut_date,
+        EngineNo as engine_no,
+        ChassisNo as chassis_no,
+        LotId as lot_id,
+        LotNo as lot_no,
+        ModelNameInInvoice as model_name_in_invoice,
+        InvoiceNo as invoice_no,
+        InvoiceDate as invoice_date,
+        InvoiceAmount as invoice_amount,
+        VATAmount as vat_amount,
+        TotalInvoiceAmount as total_invoice_amount,
+        CreditTerm as credit_term,
+        PaymentType as payment_type,
+        PaymentDueDate as payment_due_date,
+        ShippingBy as shipping_by,
+        ShippingLocationId as shipping_location_id,
+        IssueStockPlace as issue_stock_place,
+        ReturnFlag as return_flag,
+        OEMSalesOrderNo as oem_sales_order_no,
+        StorageLocation as storage_location,
+        RetailSaleDate as retail_sale_date,
+        RetailSaleInvoiceDate as retail_sale_invoice_date,
+        DeliveryDate as delivery_date,
+        Source as source,
+        VehicleWarranty as vehicle_warranty,
+        CouponWarranty as coupon_warranty,
+        OEMSaleOrderType as oem_sale_order_type,
+        OEMSaleOrderDate as oem_sale_order_date,
+        OrderReason as order_reason,
+        LockedAll as locked_all,
+        SPLocked as sp_locked,
+        FreeLocked as free_locked,
+        KindLocked as kind_locked,
+        OperationId as operation_id,
+        ActionId as action_id,
+        ActionDate as action_date,
+        PrimaryStatusId as primary_status_id,
+        RearBodyTypeId as rear_body_type_id,
+        SegmentUsageBehavior as segment_usage_behavior,
+        TransportDate as transport_date,
+        IsCancelled as is_cancelled,
+        CancelDate as cancel_date,
+        SecondaryStatusId as secondary_status_id,
+        GPSInstalledBranchId as gps_installed_branch_id,
+        GPSInstalledDate as gps_installed_date,
+        GPSInterfaceReceivedOn as gps_interface_received_on,
+        CurrentYardLocationId as current_yard_location_id,
+        LastServiceDate as last_service_date,
+        LastServiceMileage as last_service_mileage,
+        FreezeMileage as freeze_mileage,
+        IsStockAvailable as is_stock_available,
+        SalesModelName as sales_model_name,
+        OEMCarePackage as oem_care_package,
+        SoldDealerCompanyID as sold_dealer_company_id,
+        SoldDealerBranchID as sold_dealer_branch_id,
+        LatestMileage as lastest_mileage,
+        GPSInterfaceContractStartDate as gps_interface_contract_start_date,
+        GPSInterfaceContractEndDate as gps_interface_contract_end_date,
+        DriverName as driver_name,
+        DriverContactNumber as driver_contact_number,
+        TISBillingType as tis_billing_type,
+        RCIDate as rci_date,
+        InternalVINNo as internal_vin_no,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedBy as updated_by,
+        UpdatedDate as updated_date
+        FROM CM.VehicleMaster
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: r_vehicle_master
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    delivery_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    action_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    transport_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    cancel_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    gps_installed_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    last_service_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'

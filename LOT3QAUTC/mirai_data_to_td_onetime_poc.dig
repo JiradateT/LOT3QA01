@@ -1,0 +1,42 @@
+timezone: Asia/Bangkok
+
+#schedule:
+#  daily>: 01:00:00
+
+_export:
+  mail:
+    from: TD_InterfacePRD@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+
+  workflow_name: Mirai data to TD Onetime 
+  ENV: develop
+  td:
+    database: mirai_data_to_td
+
++start_message:
+  sh>: echo start Mirai data to TD
+
++current_loc:
+  sh>: pwd
+
++mirai_data_to_td_onetime:
+
+  +2_m_customer_attribute_details_r:
+    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_attribute_details_r.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Customer Attribute Details Onetime Workflow Error
+
++success_message:
+    mail>: ./TD_Mirai_data_to_TD_mail_body.txt
+    subject: Mirai data to TD Onetime  Workflow Success

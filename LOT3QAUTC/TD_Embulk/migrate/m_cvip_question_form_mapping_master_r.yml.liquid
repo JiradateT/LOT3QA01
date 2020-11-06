@@ -1,0 +1,52 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{mig_in_host}}
+  user: {{mig_in_user}}
+  password: {{mig_in_password}}
+  database: {{mig_in_database}}
+  fetch_rows: 3000
+  query: |
+    SELECT
+        Id as id,
+        QuestionId as question_id,
+        FormCode as form_code,
+        IsActive as is_active,
+        QuestionSequence as question_sequence,
+        QuestionDescription as question_description,
+        QuestionDescriptionAlt as question_description_alt,
+        ParentQuestionId as parent_question_id,
+        FormSequence as form_sequence,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedDate as updated_date,
+        UpdatedBy as updated_by
+        FROM CM.CVIPQuestionFormMappingMaster
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: r_cvip_question_form_mapping_master
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
