@@ -30,91 +30,91 @@ _export:
 
 +mirai_data_to_td_onetime:
 
-  +2_m_customer_attribute_details_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_attribute_details_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details Onetime Workflow Error
+#  +2_m_customer_attribute_details_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_attribute_details_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Attribute Details Onetime Workflow Error
 
-  +4_m_customer_attribute_details_history_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_attribute_details_history_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Details History Onetime Workflow Error
+#  +4_m_customer_attribute_details_history_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_attribute_details_history_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Attribute Details History Onetime Workflow Error
 
   #modify value > values
   #error
-  +6_m_customer_attribute_value_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_attribute_values_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Attribute Onetime Workflow Error
+#  +6_m_customer_attribute_value_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_attribute_values_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Attribute Onetime Workflow Error
 
-  +8_m_customer_branch_parameters_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_branch_parameters_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Branch Onetime Workflow Error
+#  +8_m_customer_branch_parameters_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_branch_parameters_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Branch Onetime Workflow Error
 
-  +10_m_customer_branch_status_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_branch_status_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Branch Status Onetime Workflow Error
+#  +10_m_customer_branch_status_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_branch_status_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Branch Status Onetime Workflow Error
 
-  +12_m_customer_branch_status_history_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_branch_status_history_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Branch Status History Onetime Workflow Error
+#  +12_m_customer_branch_status_history_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_branch_status_history_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Branch Status History Onetime Workflow Error
 
-  +14_m_customer_profile_address_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_address_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profile Address Onetime Workflow Error
+#  +14_m_customer_profile_address_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_address_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profile Address Onetime Workflow Error
 
-  +16_m_customer_profile_address_history_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_address_history_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profile Address History Onetime Workflow Error
+#  +16_m_customer_profile_address_history_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_address_history_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profile Address History Onetime Workflow Error
 
-  +18_m_customer_profile_contact_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_contact_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
+#  +18_m_customer_profile_contact_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_contact_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
       subject: Customer Profile Contact Onetime Workflow Error
 
-  +20_m_customer_profile_contact_history_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_contact_history_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profile Contact History Onetime Workflow Error
+#  +20_m_customer_profile_contact_history_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profile_contact_history_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profile Contact History Onetime Workflow Error
 
-  +22_m_customer_profiles_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profiles_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profiles Onetime Workflow Error
+#  +22_m_customer_profiles_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profiles_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profiles Onetime Workflow Error
 
-  +24_m_customer_profiles_history_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profiles_history_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Customer Profiles History Onetime Workflow Error
+#  +24_m_customer_profiles_history_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_customer_profiles_history_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profiles History Onetime Workflow Error
 
   +25_m_cvip_answer_form_mapping_master_r:
     sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
@@ -173,12 +173,13 @@ _export:
       subject: CVIP Question Master Onetime Workflow Error
 
   #Fix tabtab in select
-  +36_m_dealer_network_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_dealer_network_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Dealer Network Onetime Workflow Error
+# Wait Script view from guide
+#  +36_m_dealer_network_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_dealer_network_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Dealer Network Onetime Workflow Error
 
   #AllData
   +37_m_hr_employee_master:
@@ -189,12 +190,13 @@ _export:
       subject: Employee Master Workflow Error
 
   #Fix tabtab in select
-  +38_m_model_information_r:
-    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
-         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_model_information_r.yml.liquid
-    _error:
-      mail>: ./mail_body_error.txt
-      subject: Model Information Onetime Workflow Error
+# Wait Script view from guide
+#  +38_m_model_information_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/migrate/m_model_information_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Model Information Onetime Workflow Error
 
   #AllData
   +39_m_quick_master_values:
