@@ -9,6 +9,161 @@ in:
   database: {{mig_in_database}}
   fetch_rows: 3000
   query: |
+    with aa as (
+    SELECT   DG.DealerGroupId
+        ,DG.DealerGroupCode
+        ,DG.DealerGroupName
+        ,(CASE WHEN DG.IsTISGroup = 1 THEN 'Yes' ELSE 'No' END) AS IsTISGroup
+
+        ,DC.DealerCompanyId
+        ,DC.CompanyCode
+        ,DC.CompanyName
+
+        ,DM.DealerRegionId
+        ,COALESCE(NULLIF(QMV_01.AlternateMasterValue, ''), QMV_01.MasterValue, '') AS DealerRegion
+        ,DM.DealerId
+        ,DM.DealerCode
+        ,DM.DealerName
+        ,LMLV_03.ListValue AS DealerType
+        ,DM.TaxRegistrationNumber
+        ,FORMAT(DM.DealerRolloutDate,'dd/MM/yyyy') AS DealerRolloutDate
+
+        ,DBA_DM.Address1             AS Dealer_HouseNo
+        ,DBA_DM.Address2	         AS Dealer_Floor  
+        ,DBA_DM.Address3	         AS Dealer_RoomNo  
+        ,DBA_DM.Address4	         AS Dealer_Building
+        ,DBA_DM.Address5	         AS Dealer_Village
+        ,DBA_DM.Address6	         AS Dealer_Soi
+        ,DBA_DM.Address7	         AS Dealer_Moo
+        ,DBA_DM.Address8	         AS Dealer_Road
+        ,QMV_02.AlternateMasterValue AS Dealer_Province
+        ,QMV_03.AlternateMasterValue AS Dealer_District
+        ,QMV_04.AlternateMasterValue AS Dealer_SubDistrict
+        ,DBA_DM.ZipCode              AS Dealer_ZipCode
+
+        ,BM.BranchId
+        ,BM.BranchCode
+        ,BM.BranchName
+        ,BM.BranchShortName
+        ,DBA_BM.Address1             AS Branch_HouseNo
+        ,DBA_BM.Address2	         AS Branch_Floor  
+        ,DBA_BM.Address3	         AS Branch_RoomNo  
+        ,DBA_BM.Address4	         AS Branch_Building
+        ,DBA_BM.Address5	         AS Branch_Village
+        ,DBA_BM.Address6	         AS Branch_Soi
+        ,DBA_BM.Address7	         AS Branch_Moo
+        ,DBA_BM.Address8	         AS Branch_Road
+        ,QMV_05.AlternateMasterValue AS Branch_Province
+        ,QMV_06.AlternateMasterValue AS Branch_District
+        ,QMV_07.AlternateMasterValue AS Branch_SubDistrict
+        ,DBA_BM.ZipCode              AS Branch_ZipCode
+
+        ,(CASE WHEN BM.IsHQ = 1 THEN 'Yes' ELSE 'No' END) AS IsHQ
+        ,(CASE WHEN BM.IsDroppingLocation = 1 THEN 'Yes' ELSE 'No' END) AS IsDroppingLocation
+
+
+        ,BM.BranchTaxID
+        ,(CASE WHEN BM.VehicleOrder = 1 THEN 'Yes' ELSE 'No' END) AS IsVehicleOrderHQ
+        ,(CASE WHEN BM.SalesOperations = 1 THEN 'Yes' ELSE 'No' END) AS SalesOperations
+        ,(CASE WHEN BM.ServiceOperations = 1 THEN 'Yes' ELSE 'No' END) AS ServiceOperations
+        ,(CASE WHEN BM.PartOrdertoOEM = 1 THEN 'Yes' ELSE 'No' END) AS PartOrdertoOEM
+        ,(CASE WHEN BM.PartsOperations = 1 THEN 'Yes' ELSE 'No' END) AS PartsOperations
+
+
+        ,BM.ServiceCentreCode
+        ,BM.ServiceCentrePhoneNoFrom
+        ,BM.ServiceCentrePhoneNoTo
+        ,BM.ServiceCentrePhoneNoExt
+        ,BM.ServiceCentreFaxNoFrom
+        ,BM.ServiceCentreFaxNoTo
+
+        ,BM.AppointmentPhoneNoFrom
+        ,BM.AppointmentPhoneNoTo
+        ,BM.AppointmentPhoneNoExt
+
+        ,BM.SalesOfficePhoneNoFrom
+        ,BM.SalesOfficePhoneNoTo
+        ,BM.SalesOfficePhoneNoExt
+        ,BM.SalesOfficeFaxNoFrom
+        ,BM.SalesOfficeFaxNoTo
+
+        ,LMLV_01.ListValue AS TypeofServiceCentre
+        ,(CASE WHEN BM.OpenforService = 1 THEN 'Yes' ELSE 'No' END) AS OpenforService
+        ,(CASE WHEN BM.VehicleInspectionService = 1 THEN 'Yes' ELSE 'No' END) AS VehicleInspectionService
+        ,(CASE WHEN BM.BodyPaintShop = 1 THEN 'Yes' ELSE 'No' END) AS BodyPaintShop
+        ,(CASE WHEN BM.CVMobileService = 1 THEN 'Yes' ELSE 'No' END) AS CVMobileService
+        ,(CASE WHEN BM.LCVMobileService = 1 THEN 'Yes' ELSE 'No' END) AS LCVMobileService
+        ,(CASE WHEN BM.AuthorizedCNG = 1 THEN 'Yes' ELSE 'No' END) AS AuthorizedCNG
+        ,(CASE WHEN BM.CVIOSPassed = 1 THEN 'Yes' ELSE 'No' END) AS CVIOSPassed
+        ,(CASE WHEN BM.LCVIOSPassed = 1 THEN 'Yes' ELSE 'No' END) AS LCVIOSPassed
+        ,(CASE WHEN BM.iTruckSolution = 1 THEN 'Yes' ELSE 'No' END) AS iTruckSolution
+        ,(CASE WHEN BM.GreenGarage = 1 THEN 'Yes' ELSE 'No' END) AS GreenGarage
+
+            /* Branch working Time */
+        , REPLACE((SELECT (CAST(StartTime AS nvarchar(5)) + '-' + CAST(EndTime AS nvarchar(5))) FROM    CM.BranchWorkingTime
+            WHERE   WeekDay = 2 AND BranchId = BM.BranchId),'00:00-00:00','') AS WorkingTime_Mon_Fri
+        , REPLACE((SELECT (CAST(StartTime AS nvarchar(5)) + '-' + CAST(EndTime AS nvarchar(5))) FROM    CM.BranchWorkingTime
+            WHERE   WeekDay = 7 AND BranchId = BM.BranchId),'00:00-00:00','') AS WorkingTime_Sat
+        , REPLACE((SELECT (CAST(StartTime AS nvarchar(5)) + '-' + CAST(EndTime AS nvarchar(5))) FROM    CM.BranchWorkingTime
+            WHERE   WeekDay = 1 AND BranchId = BM.BranchId),'00:00-00:00','') AS WorkingTime_Sun
+
+        ,LMLV_02.ListValue AS PartCreditAvailability
+        ,DBA_Con.Address1            AS BranchContact_HouseNo
+        ,DBA_Con.Address2	         AS BranchContact_Floor  
+        ,DBA_Con.Address3	         AS BranchContact_RoomNo  
+        ,DBA_Con.Address4	         AS BranchContact_Building
+        ,DBA_Con.Address5	         AS BranchContact_Village
+        ,DBA_Con.Address6	         AS BranchContact_Soi
+        ,DBA_Con.Address7	         AS BranchContact_Moo
+        ,DBA_Con.Address8	         AS BranchContact_Road
+        ,QMV_08.AlternateMasterValue AS BranchContact_Province
+        ,QMV_09.AlternateMasterValue AS BranchContact_District
+        ,QMV_10.AlternateMasterValue AS BranchContact_SubDistrict
+        ,DBA_Con.ZipCode             AS BranchContact_ZipCode
+
+
+        ,BM.IsActive
+        ,UM.UserName AS UpdatedByUser
+        ,BM.UpdatedDate
+
+
+    FROM CM.DealerGroups DG WITH (NOLOCK) 
+    JOIN CM.DealerCompany DC WITH (NOLOCK) ON DC.DealerGroupId = DG.DealerGroupId  
+     JOIN CM.DealerMaster DM WITH (NOLOCK) ON DM.DealerCompanyId = DC.DealerCompanyId
+     JOIN CM.BranchMaster BM WITH (NOLOCK) ON BM.DealerId = DM.DealerId
+     LEFT JOIN CM.LOVMasterLanguageValues LMLV_01 WITH (NOLOCK) ON LMLV_01.LanguageId = 'EN-US' AND LMLV_01.ListRecordId = BM.TypeofServiceCentre
+     LEFT JOIN CM.LOVMasterLanguageValues LMLV_02 WITH (NOLOCK) ON LMLV_02.LanguageId = 'EN-US' AND LMLV_02.ListRecordId = BM.PartCreditAvailability
+     LEFT JOIN CM.LOVMasterLanguageValues LMLV_03 WITH (NOLOCK) ON LMLV_03.LanguageId = 'EN-US' AND LMLV_03.ListRecordId = DM.DealerType
+
+
+     LEFT JOIN CM.QuickMasterValues QMV_01 WITH (NOLOCK) ON QMV_01.QuickMasterRecordId = DM.DealerRegionId
+        LEFT JOIN CM.DealerBranchAddress DBA_DM WITH (NOLOCK) ON DBA_DM.ReferenceId = BM.DealerId
+         AND DBA_DM.AddressLevel = 3
+         AND DBA_DM.SNO = 1
+         AND DBA_DM.IsActive = 1
+        LEFT JOIN CM.QuickMasterValues QMV_02 WITH (NOLOCK) ON QMV_02.QuickmasterRecordId = DBA_DM.Address18  
+        LEFT JOIN CM.QuickMasterValues QMV_03 WITH (NOLOCK) ON QMV_03.QuickmasterRecordId = DBA_DM.Address19 
+        LEFT JOIN CM.QuickMasterValues QMV_04 WITH (NOLOCK) ON QMV_04.QuickmasterRecordId = DBA_DM.Address20 
+
+
+        LEFT JOIN CM.DealerBranchAddress DBA_BM WITH (NOLOCK) ON DBA_BM.ReferenceId = BM.BranchId
+         AND DBA_BM.AddressLevel = 4
+         AND DBA_BM.SNO = 1
+         AND DBA_BM.IsActive = 1
+        LEFT JOIN CM.QuickMasterValues QMV_05 WITH (NOLOCK) ON QMV_05.QuickmasterRecordId = DBA_BM.Address18  
+        LEFT JOIN CM.QuickMasterValues QMV_06 WITH (NOLOCK) ON QMV_06.QuickmasterRecordId = DBA_BM.Address19 
+        LEFT JOIN CM.QuickMasterValues QMV_07 WITH (NOLOCK) ON QMV_07.QuickmasterRecordId = DBA_BM.Address20 
+
+        LEFT JOIN CM.DealerBranchAddress DBA_Con WITH (NOLOCK) ON DBA_Con.ReferenceId = BM.BranchId
+         AND DBA_Con.AddressLevel = 4
+         AND ISNULL(DBA_Con.IsContactAddress,0) = 1
+         AND DBA_Con.IsActive = 1
+        LEFT JOIN CM.QuickMasterValues QMV_08 WITH (NOLOCK) ON QMV_08.QuickmasterRecordId = DBA_Con.Address9  
+        LEFT JOIN CM.QuickMasterValues QMV_09 WITH (NOLOCK) ON QMV_09.QuickmasterRecordId = DBA_Con.Address10 
+        LEFT JOIN CM.QuickMasterValues QMV_10 WITH (NOLOCK) ON QMV_10.QuickmasterRecordId = DBA_Con.Address11 
+
+        LEFT JOIN MST.UserMaster UM WITH (NOLOCK) ON UM.UserId = BM.UpdatedBy
+     )
     SELECT
         DealerGroupId as dealer_group_id,
         DealerGroupCode as dealer_group_code,
@@ -105,7 +260,7 @@ in:
         IsActive as is_active,
         UpdatedByUser as updated_by_user,
         UpdatedDate as updated_date
-        FROM TD.VW_CM_DealerNetwork
+        FROM aa
 
 filters:
 - type: add_time
