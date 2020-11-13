@@ -1,0 +1,25 @@
+{% include 'config' %}
+
+exec:
+  min_output_tasks: 1
+in:
+  type: td
+  apikey:   {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  query: |
+    select * from diff_r_proactive
+
+out:
+  type: file
+  path_prefix: {{out_path}}/proactive
+  file_ext: csv
+  formatter:
+    type: csv
+    delimiter: "|"
+    header_line: true
+    charset: UTF-8
+    newline: CRLF
+    quote: '"'
+    escape: "\\"
+    default_timezone: 'UTC'

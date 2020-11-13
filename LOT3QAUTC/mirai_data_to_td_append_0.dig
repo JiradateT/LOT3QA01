@@ -22,7 +22,7 @@ _export:
     database: mirai_test_qa
   
 +start_message:
-  sh>: echo start Service Appointment and Proactive and Prospect_booking_RS
+  sh>: echo start Service Appointment and Proactive and Prospect_BK_RS
 
 +current_loc:
   sh>: pwd
@@ -35,14 +35,20 @@ _export:
 
   +1_service_appointment:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
-         embulk run ~/DIGDAG_TD/TD_Embulk/service_appointment_append.yml.liquid
+         embulk run ~/DIGDAG_TD/TD_Embulk/service_appointment_append.yml.liquid;
+         mkdir -p ~/backup/$(date +%d%m%Y);
+         embulk run ~/DIGDAG_TD/TD_Embulk/backup_csv_service_appointment.yml.liquid;
+         mv ~/backup/service_appointment*.csv ~/backup/$(date +%d%m%Y)
     _error:
       mail>: ./mail_body_error.txt
       subject: Serivce Appointment Append Workflow Error
 
   +2_Proactive:
     sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;  
-         embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append.yml.liquid
+         embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append.yml.liquid;
+         mkdir -p ~/backup/$(date +%d%m%Y);
+         embulk run ~/DIGDAG_TD/TD_Embulk/backup_csv_proactive.yml.liquid;
+         mv ~/backup/proactive*.csv ~/backup/$(date +%d%m%Y)
     _error:
       mail>: ./mail_body_error.txt
       subject: Proactive Append Workflow Error
@@ -53,6 +59,13 @@ _export:
     _error:
       mail>: ./mail_body_error.txt
       subject: Prospect_booking_retail_sales Append Workflow Error
+
+  +4_zip:
+    sh>: tar -czvf ~/backup/$(date +%d%m%Y).tar.gz ~/backup/$(date +%d%m%Y);
+         rm -R ~/backup/$(date +%d%m%Y);
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Backup Zip file Workflow Error
 
   +update_master_tables:
     _parallel: true

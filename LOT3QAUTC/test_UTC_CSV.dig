@@ -1,0 +1,52 @@
+timezone: Asia/Bangkok
+#timezone: UTC
+
+#schedule:
+#  daily>: 06:00:00
+
+_export:
+  mail:
+    from: TD_InterfaceQA@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Service Appointment and Proactive and Prospect_booking_retail_sales
+  ENV: develop
+  td:
+    database: mirai_test_qa
+
++start_message:
+  sh>: echo start Service Appointment and Proactive and Prospect_booking_RS
+
++current_loc:
+  sh>: pwd
+
++start_email:
+  mail>: ./TD_proactive_mail_body.txt
+  subject: Service Appointment and Proactive and Prospect_booking_RS Workflow Started
+
++mirai_data_to_td_lot1_2_append:
+
+  +2_Proactive:
+    sh>:  export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+          embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append_UTC.yml.liquid;
+#         embulk run ~/DIGDAG_TD/TD_Embulk/sql_csv_UTC.yml.liquid;
+#         embulk run ~/DIGDAG_TD/TD_Embulk/proactive_append_UTC.yml.liquid;
+#         mkdir -p /home/qemtdadmin/backup/$(date +%d%m%Y);
+#         embulk run ~/DIGDAG_TD/TD_Embulk/backup_csv_proactive.yml.liquid 
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Proactive Append Workflow Error
+
+
+
++success_message:
+    mail>: ./TD_proactive_mail_body.txt
+    subject: Service Appointment and Proactive and Prospect_booking_RS Workflow Success
