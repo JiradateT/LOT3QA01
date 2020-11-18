@@ -1,2 +1,0 @@
-INSERT INTO r_vehicle_dealer_group_parameters
-SELECT * FROM diff_r_vehicle_dealer_group_parameters

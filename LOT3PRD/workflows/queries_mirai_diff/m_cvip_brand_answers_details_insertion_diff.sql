@@ -1,2 +1,0 @@
-INSERT INTO r_cvip_brand_answers_detail
-SELECT * FROM diff_r_cvip_brand_answers_detail

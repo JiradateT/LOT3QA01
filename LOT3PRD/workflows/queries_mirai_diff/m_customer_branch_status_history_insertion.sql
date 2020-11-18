@@ -1,2 +1,0 @@
-INSERT INTO r_customer_branch_status_history
-SELECT * FROM diff_r_customer_branch_status_history

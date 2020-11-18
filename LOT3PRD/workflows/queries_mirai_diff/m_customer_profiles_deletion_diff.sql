@@ -1,1 +1,0 @@
-DELETE FROM r_customer_profiles WHERE profile_id IN (SELECT profile_id FROM diff_r_customer_profiles)

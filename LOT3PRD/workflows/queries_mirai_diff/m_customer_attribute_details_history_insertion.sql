@@ -1,2 +1,0 @@
-INSERT INTO r_customer_attribute_details_history
-SELECT * FROM diff_r_customer_attribute_details_history

@@ -1,2 +1,0 @@
-INSERT INTO r_repair_history_header
-SELECT * FROM diff_r_repair_history_header

@@ -1,2 +1,0 @@
-INSERT INTO r_customer_profile_contact
-SELECT * FROM diff_r_customer_profile_contact
