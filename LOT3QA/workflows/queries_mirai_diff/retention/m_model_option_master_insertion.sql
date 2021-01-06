@@ -1,0 +1,2 @@
+INSERT INTO r_model_option_master
+SELECT * FROM diff_r_model_option_master

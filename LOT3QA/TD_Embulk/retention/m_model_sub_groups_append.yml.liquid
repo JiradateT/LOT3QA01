@@ -1,0 +1,48 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 30000
+  query: |
+    SELECT
+    DISTINCT	
+    ModelSubGroupId as model_sub_group_id ,
+    ModelSubGroupCode as model_sub_group_code	,
+	ModelSubGroupDescription as model_sub_group_description	,
+	SubGroupType as sub_group_type	,
+    IsActive as is_active,
+    CreatedBy   as created_by,
+    CreatedDate as created_date,
+    UpdatedBy   as upload_by,
+    UpdatedDate as updated_date
+    FROM TD.ModelSubGroups
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: diff_r_model_sub_groups
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'

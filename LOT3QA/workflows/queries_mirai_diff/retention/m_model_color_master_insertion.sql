@@ -1,0 +1,2 @@
+INSERT INTO r_model_color_master
+SELECT * FROM diff_r_model_color_master

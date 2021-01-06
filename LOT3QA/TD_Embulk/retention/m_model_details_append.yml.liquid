@@ -1,0 +1,143 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 30000
+  query: |
+    SELECT
+    DISTINCT	
+    ModelId as model_id,
+    ModelMasterId as model_master_id,
+    ModelName as model_name,
+    ModelShortName as model_short_name,
+    ModelYear as model_year,
+    ModelColorId   as model_color_id,
+    ColorTypeId as color_type_id,
+    ModelOptionId  as model_option_id,
+    FuelTypeId as fuel_type_id,
+    EngineModel as engine_model,
+    FuelSplTypeId as fuel_spl_type_id,
+    NoOfCylinders as no_of_cylinders,
+    NoOfHPMarket as no_of_hp_market,
+    ThaiModelNameId as thai_model_name_id,
+    DisplacementActual as displacement_actual,
+    DisplacementMarket as displacement_market,
+    TransmissionId as transmission_id,
+    SteeringId as steering_id,
+    DoorId    as    door_id    ,
+    AirbagId    as    airbag_id    ,
+    AbsId    as    abs_id    ,
+    DriveSystemId    as    drive_system_id    ,
+    HeadLampId    as    head_lamp_id    ,
+    HorsePower    as    horse_power    ,
+    WbaseTypeId    as    wbase_type_id    ,
+    Wbase    as    wbase    ,
+    SeriesName    as    series_name    ,
+    GrossVehicleWeight    as    gross_vehicle_weight    ,
+    EngineTurboCooler    as    engine_turbo_cooler    ,
+    SeatType    as    seat_type    ,
+    VersionName    as    version_name    ,
+    CabType    as    cabtype    ,
+    Torque    as    torque    ,
+    Feature    as    feature    ,
+    TonClassId    as    ton_class_id    ,
+    FinalTypeId    as    final_type_id    ,
+    SpecialSpecId    as    special_spec_id    ,
+    RevisionId    as    revisionid    ,    
+	Tire    as    tire    ,
+    TransmissionSpeed    as    trans_mission_speed    ,
+    GrossCombinationWeight    as    gross_combination_weight    ,
+    ColorInterior    as    color_interior    ,
+    SeatColor    as    seat_color    ,
+    LeaseMaintennacePackageId    as    lease_maintennace_package_id    ,
+    IsAccessoryFlag    as    is_accessory_flag    ,
+    FutureUseId    as    future_use_id    ,
+    VehicleTypeId    as    vehicle_type_id    ,
+    Segment1Code    as    segment1_code    ,
+    Segment2    as    segment2    ,
+    ModelGroupId    as    model_group_id    ,
+    SubModelGroup1    as    sub_model_group1    ,
+    SubModelGroup2    as    sub_model_group2    ,
+    FactoryGrade    as    factory_grade    ,
+    GenGradeId    as    gen_grade_id    ,
+    Class1MarketingGrade    as    class1_marketing_grade    ,
+    Class2MarketingName    as    class2_marketing_name    ,
+    HorsePowerType    as    horse_power_type    ,
+    GearMarketName    as    gear_market_name    ,
+    EuropeanEmissionStd    as    european_emission_std    ,
+    Audio    as    audio    ,
+	DevelopCode    as    develop_code    ,
+    GPSContractId    as    gps_contract_id    ,
+    CabSuspensionId    as    cab_suspension_id    ,
+    HiRideId    as    hiride_id    ,
+    FuelTypeSdId    as    fuel_typesd_id    ,
+    SuffixCode    as    suffix_code    ,
+    BomSetOptionId    as    bomset_option_id    ,
+    BomPrice    as    bom_price    ,
+    BrandId    as    brand_id    ,
+    SalesRecordModel    as    sales_record_model    ,
+    VwVehicleWeight    as    vw_vehicle_weight    ,
+    SpecialSpecProdId    as    special_spec_prod_id    ,
+    FinalGearRatio    as    final_gear_ratio    ,
+    StickerTypeId    as    sticker_type_id    ,
+    LTGGroup    as    ltg_group    ,
+    OwnerManual    as    owner_manual    ,
+    PartCatalog    as    part_catalog    ,
+    BreakSystemId    as    break_system_id    ,
+    ModelGroupForSalesTarget    as    model_group_for_sales_target    ,
+    SpecialToolsCatalog    as    special_tools_catalog    ,
+    ParentCodeId    as    parent_code_id    ,
+    WorkshopManual    as    workshop_manual    ,
+    MmVariantCondition    as    mm_variant_condition    ,
+    SdVariantCondition1    as    sd_variant_condition1    ,
+    WarrantyVariantCondition    as    warranty_variant_condition    ,
+    SdVariantCondition2    as    sd_variant_condition2    ,
+    SdVariantCondition3    as    sd_variant_condition3    ,
+    BomSetByModelId    as    bom_set_by_model_id    ,
+    SdVariantCondition4    as    sd_variant_condition4    ,
+    ProductModelName    as    product_model_name    ,
+    BookNumber    as    book_number    ,
+    OrderEffectiveFrom    as    order_effective_from    ,
+    OrderEffectiveTo    as    order_effective_to    ,
+    SalesEffectiveFrom    as    sales_effective_from    ,
+    SalesEffectiveTo    as    sales_effective_to    ,
+    SpecialModelFlag    as    special_model_flag    ,
+    AccessoryFlagDescription    as    accessory_flag_description    ,
+    GenGradeDescription    as    gen_grade_description    ,
+    BKEffectiveDate    as    bk_effective_date    ,
+    RSEffectiveDate as    rs_effective_date,
+    CreatedBy   as created_by,
+    CreatedDate as created_date,
+    UpdatedBy   as upload_by,
+    UpdatedDate as updated_date
+    FROM TD.ModelDetails
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: diff_r_model_details
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
