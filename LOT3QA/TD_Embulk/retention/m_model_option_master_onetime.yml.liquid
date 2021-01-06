@@ -1,0 +1,47 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 30000
+  query: |
+    SELECT
+    DISTINCT	
+    ModelOptionId   as model_option_id,
+    ModelOptionCode as model_option_code,
+    ModelOptionName as model_option_name,
+    IsActive as is_active,
+    CreatedBy   as created_by,
+    CreatedDate as created_date,
+    UpdatedBy   as upload_by,
+    UpdatedDate as updated_date
+    FROM TD.ModelOptionMaster
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: r_model_option_master
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
