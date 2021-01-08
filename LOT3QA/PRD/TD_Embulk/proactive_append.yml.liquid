@@ -1,0 +1,114 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 30000
+  query: |
+    SELECT
+    DISTINCT 
+    SNO as sno,
+    DealerName as dealer_name,
+    BranchName as branch_name,
+    FollowupId as followup_id,
+    FollowupTaskResultId as followup_task_result_id,
+    FollowupCode as followup_code,
+    FollowUpStatus as follow_up_status,
+    PatternType as pattern_type,
+    PatternName as pattern_name,
+    CustomerSourceType as customer_source_type,
+    IsCouponAvailable as is_coupon_available,
+    InitialPlanFollowupDate as initial_plan_followup_date,
+    PlannedFollowupDate as planned_followup_date,
+    ActualFollowupDate as actual_followup_date,
+    MadeAppointment as made_appointment,
+    DenialReason as denial_reason,
+    FollowupChannel as followup_channel,
+    ContactResult as contact_result,
+    ContactFailedReason as contact_failed_reason,
+    LatestInfo as latest_info,
+    NoOfCalling as no_of_calling,
+    IsCustomerServiceIn as is_customer_service_in,
+    OwnerProfile as owner_profile,
+    OwnerPreferableContactTime as owner_preferable_contact_time,
+    UserPreferableContactTime as user_preferable_contact_time,
+    ServiceContactPreferredContactTime as service_contact_preferred_contact_time,
+    DriverPreferableContactTime as driver_preferable_contact_time,
+    VehicleType as vehicle_type,
+    ModelName as model_name,
+    DeliveryDate as delivery_date,
+    VINNo as vin_no,
+    EngineNo as engine_no,
+    ChassisNo as chassis_no,
+    RegistrationNo as registration_no,
+    RegistrationProvince as registration_province,
+    FreezeMileage as freeze_mileage,
+    LatestMileage as latest_mileage,
+    TotalMileage as total_mileage,
+    RODate as ro_date,
+    InvoiceDate as invoice_date,
+    InvoiceNo as invoice_no,
+    AppointmentNo as appointment_no,
+    EstimatedNextServiceDate as estimated_next_service_date,
+    ISUZUCarePackage as isuzu_care_package,
+    ServiceRanking as service_ranking,
+    IsUserDealerVIP as is_user_dealer_vip,
+    IsCancelled as is_cancelled,
+    CancelReason as cancel_reason,
+    CancelledRemark as cancelled_remark,
+    IsCancelledPermanent as is_cancelled_permanent,
+    CancelPermanentReason as cancel_permanent_reason,
+    CancelPermanentRemark as cancel_permanent_remark,
+    RecordedBy as recorded_by,
+    SubDistrict as sub_district,
+    District as district,
+    Province as province,
+    ZipCode as zip_code,
+    UpdatedDate as updated_date
+    FROM TPIT.VW_CRM_ProActive
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: diff_r_proactive
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    initial_plan_followup_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    planned_followup_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    actual_followup_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    ro_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    estimated_next_service_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'

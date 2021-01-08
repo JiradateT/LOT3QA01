@@ -1,0 +1,2 @@
+INSERT INTO r_service_appointment
+SELECT * FROM diff_r_service_appointment

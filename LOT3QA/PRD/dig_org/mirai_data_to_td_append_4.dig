@@ -1,0 +1,117 @@
+timezone: Asia/Bangkok
+
+schedule:
+  daily>: 06:00:00
+
+_export:
+  mail:
+    from: TD_Interface@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [pattharin_b@tripetch-it.co.th, jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Mirai data to TD Daily
+  ENV: develop
+  td:
+    database: mirai_raw
+  
++start_message:
+  sh>: echo start Mirai data to TD
+
++current_loc:
+  sh>: pwd
+
++start_email:
+  mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+  subject: Mirai data to TD Workflow 4 Daily Started 
+
++mirai_data_to_td_append:
+
+  #workflow_4 
+  #AllData use in append + onetime
+  +28_m_cvip_answer_master_r:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_master_r.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: CVIP Answer Master Onetime Workflow Error
+
+  +29_m_cvip_brand_answers_detail:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_brand_answers_detail.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: CVIP Brand Answers Detail Workflow Error
+
+  # modify forms > form 
+  +31_m_cvip_forms_header:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_form_header.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: CVIP Forms Header Workflow Error
+
+  #AllData use in append + onetime
+  +33_m_cvip_forms_configuration_r:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_forms_configuration_r.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: CVIP Forms Configuration Onetime Workflow Error
+
+  #AllData use in append + onetime
+  +34_m_cvip_question_form_mapping_master_r:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_question_form_mapping_master_r.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: CVIP Question Form Mapping Master Onetime Workflow Error
+
+  #AllData use in append + onetime
+  ##Fix tabtab in select
+  +36_m_dealer_network_r:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_network_r.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Dealer Network Onetime Workflow Error
+
+  +update_master_tables:
+    _parallel: true
+
+    #workflow_4 
+    +14_upd_m_cvip_brand_answers_details:
+      _retry: 2
+
+      +delete_diff_m_cvip_brand_answers_details_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q m_cvip_brand_answers_detail_deletion_diff.sql
+
+      +insert_diff_m_cvip_brand_answers_details_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q m_cvip_brand_answers_details_insertion_diff.sql
+
+    +15_upd_m_cvip_form_header:
+      _retry: 2
+
+      +delete_diff_m_cvip_form_header_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q m_cvip_form_header_deletion_diff.sql
+
+      +insert_diff_m_cvip_form_header_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q m_cvip_form_header_insertion_diff.sql
+
++success_message:
+    mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+    subject: Mirai data to TD Workflow 4 Daily Success 

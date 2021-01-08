@@ -1,0 +1,74 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 3000
+  query: |
+    SELECT
+        ProfileId as profile_id,
+        SNo as s_no,
+        Address1 as address1,
+        Address2 as address2,
+        Address3 as address3,
+        Address4 as address4,
+        Address5 as address5,
+        Address6 as address6,
+        Address7 as address7,
+        Address8 as address8,
+        Address9 as address9,
+        Address10 as address10,
+        Address11 as address11,
+        Address12 as address12,
+        Address13 as address13,
+        Address14 as address14,
+        Address15 as address15,
+        Address16 as address16,
+        Address17 as address17,
+        Address18 as address18,
+        Address19 as address19,
+        Address20 as address20,
+        IsHomeAddress as is_home_address,
+        IsIDAddress as is_id_address,
+        IsOfficeAddress as is_office_address,
+        IsContactAddress as is_contact_address,
+        IsBillingAddress as is_billing_address,
+        IsActive as is_active,
+        FullAddress as full_address,
+        CreatedBy as created_by,
+        CreatedDate as created_date,
+        UpdatedBy as updated_by,
+        UpdatedDate as updated_date,
+        ZipCode as zipcode,
+        Remarks as remarks
+        FROM TD.CustomerProfileAddresses
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: r_customer_profile_address
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'

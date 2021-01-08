@@ -1,0 +1,133 @@
+timezone: Asia/Bangkok
+
+#schedule:
+#  daily>: 06:00:00
+
+_export:
+  mail:
+    from: TD_Interface@no-reply
+    host: 172.30.2.203
+    port: 25
+#    to: [pattharin_b@tripetch-it.co.th, jiradate_t@tripetch-it.co.th]
+    to: [jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Mirai to TD 3 daily 
+  ENV: PRD
+  td:
+    database: mirai_raw
+  
++start_message:
+  sh>: echo start Mirai data to TD
+
++current_loc:
+  sh>: pwd
+
++start_email:
+  mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+  subject: Mirai data to TD Workflow 3 Daily Started 
+
++mirai_data_to_td_append:
+
+  #workflow_3 
+  +19_m_customer_profile_contact_history:
+    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profile_contact_history.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Customer Profile Contact History Workflow Error
+
+#  +21_m_customer_profiles:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profiles Workflow Error
+
+#  +23_m_customer_profiles_history:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_customer_profiles_history.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Customer Profiles History Workflow Error
+
+  #AllData use in append + onetime
+#  +25_m_cvip_answer_form_mapping_master_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answer_form_mapping_master_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Answer Form Mapping Master Onetime Workflow Error
+
+#  +26_m_cvip_answers_detail:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_answers_detail.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Answer Details Workflow Error
+
+  +update_master_tables:
+    _parallel: true
+
+    #workflow_3
+    +10_upd_m_customer_profile_contact_history:
+      _retry: 2
+
+      +delete_m_customer_profile_contact_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q m_customer_profile_contact_history_deletion.sql
+
+      +insert_m_customer_profile_contact_history_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_raw -T presto -q m_customer_profile_contact_history_insertion.sql
+
+#    +11_upd_m_customer_profiles:
+#      _retry: 2
+
+#      +delete_diff_m_customer_profiles_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_customer_profiles_deletion_diff.sql
+
+#      +insert_diff_m_customer_profiles_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_customer_profiles_insertion_diff.sql
+
+#    +12_upd_m_customer_profiles_history:
+#      _retry: 2
+
+#      +delete_diff_m_customer_profiles_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_customer_profiles_history_deletion_diff.sql
+
+#      +insert_diff_m_customer_profiles_history_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_customer_profiles_history_insertion_diff.sql
+#
+
+#    +13_upd_m_cvip_answers_detail:
+#      _retry: 2
+
+#      +delete_diff_m_cvip_answers_detail_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_cvip_answers_detail_deletion_diff.sql
+
+#      +insert_diff_m_cvip_answers_detail_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_cvip_answers_detail_insertion_diff.sql
+
++success_message:
+    mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+    subject: Mirai data to TD Workflow 3 Daily Success 

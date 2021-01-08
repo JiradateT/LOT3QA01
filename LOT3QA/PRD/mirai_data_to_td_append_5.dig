@@ -1,0 +1,97 @@
+timezone: Asia/Bangkok
+
+#schedule:
+#  daily>: 06:00:00
+
+_export:
+  mail:
+    from: TD_Interface@no-reply
+    host: 172.30.2.203
+    port: 25
+#    to: [pattharin_b@tripetch-it.co.th, jiradate_t@tripetch-it.co.th]
+    to: [jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Mirai to TD 5 daily 
+  ENV: PRD
+  td:
+    database: mirai_raw
+  
++start_message:
+  sh>: echo start Mirai data to TD
+
++current_loc:
+  sh>: pwd
+
++start_email:
+  mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+  subject: Mirai data to TD Workflow 5 Daily Started 
+
++mirai_data_to_td_append:
+
+  #workflow_5
+  #AllData use in append + onetime
+#  +35_m_cvip_question_master_r:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_cvip_questions_master_r.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: CVIP Question Master Onetime Workflow Error
+
+  #AllData use in append + onetime
+#  +37_m_hr_employee_master:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_hr_employee_master.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Employee Master Workflow Error
+
+  #AllData use in append + onetime
+  ##Fix tabtab in select
+  +38_m_model_information_r:
+    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_information_r.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Model Information Onetime Workflow Error
+
+  #AllData use in append + onetime
+#  +39_m_quick_master_values:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_quick_master_values.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Quick Master Values Workflow Error
+
+#  +40_m_repair_history_details:
+#    sh>: export PATH=$PATH:/home/pemtdadmin/.bin/  ;    
+#         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_repair_history_details.yml.liquid
+#    _error:
+#      mail>: ./mail_body_error.txt
+#      subject: Repair History Details Workflow Error
+
+  +update_master_tables:
+    _parallel: true
+
+    #workflow_5
+#    +16_upd_m_repair_history_details:
+#      _retry: 2
+
+#      +delete_diff_m_repair_history_details_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_repair_history_details_deletion_diff.sql
+
+#      +insert_diff_m_repair_history_details_data:
+#        sh>:
+#             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+#             td query -d mirai_raw -T presto -q m_repair_history_details_insertion_diff.sql
+
++success_message:
+    mail>: ./TD_Mirai_data_to_TD_mail_body_append.txt
+    subject: Mirai data to TD Workflow 5 Daily Success 

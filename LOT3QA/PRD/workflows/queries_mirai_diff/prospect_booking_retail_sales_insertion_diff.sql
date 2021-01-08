@@ -1,0 +1,2 @@
+INSERT INTO r_prospect_booking_retail_sales_preprod
+SELECT * FROM diff_r_prospect_booking_retail_sales

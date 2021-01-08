@@ -1,0 +1,83 @@
+{% include 'config' %}
+
+in:
+  type: {{in_type}}
+  driver_path: {{in_driver_path}}
+  host: {{in_host}}
+  user: {{in_user}}
+  password: {{in_password}}
+  database: {{in_database}}
+  fetch_rows: 30000
+  query: |
+    SELECT
+    DISTINCT		
+    BranchId as    branch_id,
+    DealerId as    dealer_id,
+    BranchCode as    branch_code,
+    BranchName as    branch_name,
+    IsHQ as    is_hq,
+    IsDroppingLocation as    is_dropping_location,
+    BranchTaxID as    branch_tax_id,
+    VehicleOrder as    vehicle_order,
+    PartOrdertoOEM as    part_order_to_oem,
+    SalesOperations as    sales_operations,
+    ServiceOperations as    service_operations,
+    PartsOperations as    parts_operations,
+    ServiceCentreCode as    service_centre_code,
+    TypeofServiceCentre as    type_of_service_centre,
+    OpenforService as    open_for_service,
+    VehicleInspectionService as    vehicle_inspection_service,
+    BodyPaintShop as    body_paint_shop,
+    CVMobileService as    cv_mobile_service,
+    LCVMobileService as    lcv_mobile_service,
+    AuthorizedCNG as    authorized_cng,
+    CVIOSPassed as    cvios_passed,
+    LCVIOSPassed as    lcvio_spassed,
+    iTruckSolution as    itruck_solution,
+    GreenGarage as    green_garage,
+    PartCreditAvailability as    part_credit_availability,
+    BranchShortName as    branch_shortname,
+    ServiceCentrePhoneNoFrom as    service_centre_phone_no_from,
+    ServiceCentrePhoneNoTo as    service_centre_phone_no_to,
+    ServiceCentrePhoneNoExt as    service_centre_phone_no_ext,
+    AppointmentPhoneNoFrom as    appointment_phone_no_from,
+    AppointmentPhoneNoTo as    appointment_phone_no_to,
+    AppointmentPhoneNoExt as    appointment_phone_no_ext,
+    SalesOfficePhoneNoFrom as    sales_office_phone_no_from,
+    SalesOfficePhoneNoTo as    sales_office_phone_no_to,
+    SalesOfficePhoneNoExt as    sales_office_phone_no_ext,
+    ServiceCentreFaxNoFrom as    service_centre_fax_no_from,
+    ServiceCentreFaxNoTo as    service_centre_fax_no_to,
+    SalesOfficeFaxNoFrom as    sales_office_fax_no_from,
+    SalesOfficeFaxNoTo as    sales_office_fax_no_to,
+    IsActive as is_active,
+    CreatedBy   as created_by,
+    CreatedDate as created_date,
+    UpdatedBy   as upload_by,
+    UpdatedDate as updated_date
+    FROM TD.BranchMaster
+
+filters:
+- type: add_time
+  to_column: {name: time, type: timestamp}
+  from_value: {mode: upload_time}
+
+out:
+  type: td
+  apikey: {{out_APIKEY}}
+  endpoint: api.treasuredata.com
+  database: {{out_database}}
+  table: r_branch_master
+  time_column: time
+  mode: replace
+  default_timestamp_format: '%Y-%m-%d %H:%M:%S'
+  stamp_format: '%Y-%m-%d %H:%M:%S'
+  column_options:
+    created_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
+    updated_date:
+      type: string
+      value_type: timestamp
+      timezone: '+0700'
