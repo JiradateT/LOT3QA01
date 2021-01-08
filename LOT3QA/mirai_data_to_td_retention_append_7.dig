@@ -1,0 +1,201 @@
+timezone: Asia/Bangkok
+
+schedule:
+  daily>: 08:00:00
+
+_export:
+  mail:
+    from: TD_InterfaceQA@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [jiradate_t@tripetch-it.co.th]
+
+  plugin:
+    repositories:
+      - https://jitpack.io
+    dependencies:
+      - com.github.tamanyan:digdag-hangouts-chat:0.1.5
+  webhook_url: https://chat.googleapis.com/v1/spaces/AAAAthNXAYA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Sp7mNeKkjzwQnmxR7TZE0c73TEk1x-7iUqygWb1NCQQ%3D
+  workflow_name: Service Appointment and Proactive and Prospect_booking_retail_sales
+  ENV: develop
+  td:
+    database: mirai_test_qa
+  
++start_message:
+  sh>: echo start Mirai Retention data
+
++current_loc:
+  sh>: pwd
+  
++start_email:
+  mail>: ./TD_proactive_mail_body.txt
+  subject: Mirai Retention data Workflow Started
+
++mirai_data_to_td_retention_append:
+
+  +1_m_model_groups:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_groups_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Model Groups Append Workflow Error
+
+  +2_m_model_master:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;  
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_master_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Model Master Append Workflow Error
+
+  +3_m_model_color_master:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_color_master_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Model Color Master Append Workflow Error
+
+  +4_m_model_option_master:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_option_master_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Model Option Master Append Workflow Error	  
+
+  +5_m_model_details:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_details_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Model Details Append Workflow Error	  
+
+  +6_m_model_sub_groups:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_model_sub_groups_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Model Sub Groups Append Workflow Error
+
+  +7_m_dealer_master:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_dealer_master_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Dealer Master Append Workflow Error
+
+  +8_m_branch_master:
+    sh>: export PATH=$PATH:/home/qemtdadmin/.bin/  ;
+         embulk run ~/DIGDAG_TD/TD_Embulk/mirai_to_td_replace/m_branch_master_append.yml.liquid
+    _error:
+      mail>: ./mail_body_error.txt
+      subject: Branch Master Append Workflow Error	  
+
+  +update_master_tables:
+    _parallel: true
+  
+    +1_update_m_model_groups:
+      _retry: 2
+
+      +delete_diff_m_model_groups_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_groups_deletion.sql
+
+      +insert_m_model_groups_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_groups_insertion.sql
+
+    +2_update_m_model_master:
+      _retry: 2
+
+      +delete_diff_m_model_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_master_deletion.sql
+
+      +insert_diff_m_model_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_master_insertion.sql
+
+    +3_update_m_model_color_master:
+      _retry: 2
+
+      +delete_diff_m_model_color_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_color_master_deletion.sql
+
+      +insert_diff_m_model_color_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_color_master_insertion.sql
+
+    +4_update_m_model_option_master:
+      _retry: 2
+
+      +delete_diff_m_model_option_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_option_master_deletion.sql
+
+      +insert_diff_m_model_option_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_option_master_insertion.sql
+
+    +5_update_m_model_details:
+      _retry: 2
+
+      +delete_diff_m_model_details_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_details_deletion.sql
+
+      +insert_diff_m_model_details_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_details_insertion.sql
+
+    +6_update_m_model_sub_groups:
+      _retry: 2
+
+      +delete_diff_m_model_sub_groups_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_sub_groups_deletion.sql
+
+      +insert_diff_m_model_sub_groups_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_model_sub_groups_insertion.sql
+
+    +7_update_m_dealer_master:
+      _retry: 2
+
+      +delete_diff_m_dealer_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_dealer_master_deletion.sql
+
+      +insert_diff_m_dealer_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_dealer_master_insertion.sql
+
+    +8_update_m_branch_master:
+      _retry: 2
+
+      +delete_diff_m_branch_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_branch_master_deletion.sql
+
+      +insert_diff_m_branch_master_data:
+        sh>:
+             cd ~/DIGDAG_TD/workflows/queries_mirai_diff ;
+             td query -d mirai_test_qa -T presto -q m_branch_master_insertion.sql
+
++success_message:
+    mail>: ./TD_proactive_mail_body.txt
+    subject: Mirai Retention data Workflow Success

@@ -10,28 +10,29 @@ in:
   fetch_rows: 30000
   query: |
     SELECT
-    DISTINCT 
-    ModelGroupId as model_group_id,
-    ModelGroupCode as model_group_code,
-    ModelGroupDescription as model_group_description,
+    DISTINCT	
+    ModelSubGroupId as model_sub_group_id ,
+    ModelSubGroupCode as model_sub_group_code	,
+    ModelSubGroupDescription as model_sub_group_description	,
+    SubGroupType as sub_group_type	,
     IsActive as is_active,
     CreatedBy   as created_by,
     CreatedDate as created_date,
     UpdatedBy   as upload_by,
     UpdatedDate as updated_date
-    FROM TD.ModelGroups
+    FROM TD.ModelSubGroups
 
 filters:
 - type: add_time
   to_column: {name: time, type: timestamp}
   from_value: {mode: upload_time}
-	
+
 out:
   type: td
   apikey: {{out_APIKEY}}
   endpoint: api.treasuredata.com
   database: {{out_database}}
-  table: r_model_groups
+  table: r_model_sub_groups
   time_column: time
   mode: replace
   default_timestamp_format: '%Y-%m-%d %H:%M:%S'

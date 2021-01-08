@@ -4,6 +4,12 @@ timezone: Asia/Bangkok
 #  daily>: 01:00:00
 
 _export:
+  mail:
+    from: TD_InterfaceQA@no-reply
+    host: 172.30.2.203
+    port: 25
+    to: [jiradate_t@tripetch-it.co.th]
+
   plugin:
     repositories:
       - https://jitpack.io
@@ -81,6 +87,6 @@ _export:
       subject: Branch Master Onetime Workflow Error	  
 
 +success_message:
-    mail>: ./TD_Mirai_data_to_TD_mail_body.txt
+    mail>: ./TD_Retention_Data_mail_body.txt
     subject: Mirai data to TD Onetime  Workflow Success
-	  
+
